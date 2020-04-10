@@ -33,6 +33,7 @@ import com.avrgaming.civcraft.capture.CivPoint;
 import com.avrgaming.civcraft.config.CivSettings;
 import com.avrgaming.civcraft.config.ConfigGovernment;
 import com.avrgaming.civcraft.config.ConfigTech;
+import com.avrgaming.civcraft.construct.WarCamp;
 import com.avrgaming.civcraft.database.SQL;
 import com.avrgaming.civcraft.endgame.EndConditionScience;
 import com.avrgaming.civcraft.endgame.EndGameCondition;
@@ -62,7 +63,6 @@ import com.avrgaming.civcraft.util.CivColor;
 import com.avrgaming.civcraft.util.DateUtil;
 import com.avrgaming.civcraft.util.ItemManager;
 import com.avrgaming.civcraft.util.TagManager;
-import com.avrgaming.civcraft.village.WarCamp;
 
 import org.apache.commons.lang.StringUtils;
 

@@ -36,6 +36,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import com.avrgaming.civcraft.config.CivSettings;
+import com.avrgaming.civcraft.construct.Village;
 import com.avrgaming.civcraft.exception.CivException;
 import com.avrgaming.civcraft.loregui.book.BookResidentGui;
 import com.avrgaming.civcraft.object.Civilization;
@@ -43,7 +44,6 @@ import com.avrgaming.civcraft.object.Resident;
 import com.avrgaming.civcraft.object.Town;
 import com.avrgaming.civcraft.util.CivColor;
 import com.avrgaming.civcraft.util.Reflection;
-import com.avrgaming.civcraft.village.Village;
 
 public class CivMessage {
 

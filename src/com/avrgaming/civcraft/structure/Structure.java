@@ -33,6 +33,7 @@ import com.avrgaming.civcraft.threading.TaskMaster;
 import com.avrgaming.civcraft.util.BlockCoord;
 import com.avrgaming.civcraft.util.ChunkCoord;
 import com.avrgaming.civcraft.util.CivColor;
+import com.avrgaming.civcraft.util.SimpleBlock;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -163,14 +164,11 @@ public class Structure extends Buildable {
 		}
 		this.setCorner(new BlockCoord(rs.getString("cornerBlockHash")));
 		this.setHitpoints(rs.getInt("hitpoints"));
-		String tFilePath = rs.getString("template_name");
-		if (tFilePath == null)
-			this.setTemplate(null);
-		else
-			this.setTemplate(Template.getTemplate(tFilePath));
+		
+			this.setTemplate(Template.getTemplate(rs.getString("template_name")));
 
 		this.setComplete(rs.getBoolean("complete"));
-		this.setBuiltBlockCount(rs.getInt("builtBlockCount"));
+		this.setBlocksCompleted(rs.getInt("builtBlockCount"));
 		this.getTown().addStructure(this);
 
 		Structure struct = this;
@@ -200,10 +198,11 @@ public class Structure extends Buildable {
 		hashmap.put("type_id", this.getConfigId());
 		hashmap.put("town_id", this.getTown().getId());
 		hashmap.put("complete", this.isComplete());
-		hashmap.put("builtBlockCount", this.getBuiltBlockCount());
+		hashmap.put("builtBlockCount", this.getBlocksCompleted());
 		hashmap.put("cornerBlockHash", this.getCorner().toString());
 		hashmap.put("hitpoints", this.getHitpoints());
 		hashmap.put("template_name", this.getTemplate().getFilepath());
+		
 		SQL.updateNamedObject(this, hashmap, TABLE_NAME);
 	}
 	@Override
@@ -354,6 +353,10 @@ public class Structure extends Buildable {
 	}
 	@Override
 	public void setTurretLocation(BlockCoord absCoord) {
+		/* Override in children */
+	}
+	@Override
+	public void commandBlockRelatives(BlockCoord absCoord, SimpleBlock sb) {
 		/* Override in children */
 	}
 

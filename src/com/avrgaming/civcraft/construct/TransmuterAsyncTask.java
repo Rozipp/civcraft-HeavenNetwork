@@ -1,4 +1,4 @@
-package com.avrgaming.civcraft.village;
+package com.avrgaming.civcraft.construct;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,8 +13,6 @@ import com.avrgaming.civcraft.config.ConfigTransmuterRecipe;
 import com.avrgaming.civcraft.config.ConfigTransmuterRecipe.ResultItem;
 import com.avrgaming.civcraft.config.ConfigTransmuterRecipe.SourceItem;
 import com.avrgaming.civcraft.exception.CivTaskAbortException;
-import com.avrgaming.civcraft.object.ConstructChest;
-import com.avrgaming.civcraft.structure.Construct;
 import com.avrgaming.civcraft.threading.CivAsyncTask;
 import com.avrgaming.civcraft.threading.sync.request.UpdateInventoryRequest.Action;
 import com.avrgaming.civcraft.util.ItemManager;
@@ -177,6 +175,7 @@ public class TransmuterAsyncTask extends CivAsyncTask {
 
 			for (ConstructChest c : chests) {
 				task.syncLoadChunk(c.getCoord().getWorldname(), c.getCoord().getX(), c.getCoord().getZ());
+				//XXX Couldn't load chunk in 5000 milliseconds! Retrying.
 				Inventory tmp;
 				try {
 					tmp = task.getChestInventory(c.getCoord().getWorldname(), c.getCoord().getX(), c.getCoord().getY(), c.getCoord().getZ(), false);

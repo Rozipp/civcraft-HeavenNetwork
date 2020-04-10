@@ -1,8 +1,9 @@
-package com.avrgaming.civcraft.object;
+package com.avrgaming.civcraft.construct;
 
 import org.bukkit.entity.Player;
 
-import com.avrgaming.civcraft.structure.Construct;
+import com.avrgaming.civcraft.object.Civilization;
+import com.avrgaming.civcraft.object.Town;
 import com.avrgaming.civcraft.util.BlockCoord;
 
 public interface ConstructDamageBlock {

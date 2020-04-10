@@ -19,12 +19,12 @@
 package com.avrgaming.civcraft.command.debug;
 
 import com.avrgaming.civcraft.command.CommandBase;
+import com.avrgaming.civcraft.construct.Village;
 import com.avrgaming.civcraft.exception.CivException;
 import com.avrgaming.civcraft.main.CivGlobal;
 import com.avrgaming.civcraft.main.CivMessage;
 import com.avrgaming.civcraft.object.Resident;
 import com.avrgaming.civcraft.util.BlockCoord;
-import com.avrgaming.civcraft.village.Village;
 
 public class DebugVillageCommand extends CommandBase {
 

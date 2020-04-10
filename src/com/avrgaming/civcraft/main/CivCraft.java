@@ -24,6 +24,8 @@ import pvptimer.PvPTimer;
 
 import com.avrgaming.civcraft.config.CivSettings;
 import com.avrgaming.civcraft.config.ConfigMarketItem;
+import com.avrgaming.civcraft.construct.ConstructSign;
+import com.avrgaming.civcraft.construct.Village;
 import com.avrgaming.civcraft.database.SQL;
 import com.avrgaming.civcraft.database.SQLUpdate;
 import com.avrgaming.civcraft.endgame.EndConditionNotificationTask;
@@ -69,7 +71,6 @@ import com.avrgaming.civcraft.util.BiomeCache;
 import com.avrgaming.civcraft.util.BukkitObjects;
 import com.avrgaming.civcraft.util.ChunkCoord;
 import com.avrgaming.civcraft.util.TimeTools;
-import com.avrgaming.civcraft.village.Village;
 import com.avrgaming.civcraft.war.WarListener;
 import com.avrgaming.global.scores.CalculateScoreTimer;
 import com.avrgaming.global.scores.GlobalTickEvent;
@@ -267,7 +268,7 @@ public final class CivCraft extends JavaPlugin {
 		TaskMaster.asyncTimer("pvptimer", new PvPTimer(), TimeTools.toTicks(30));
 
 		TaskMaster.syncTimer("MobAsynckSpawner", new MobAsynckSpawnTimer(), TimeTools.toTicks(MobAsynckSpawnTimer.SPAWN_COOLDOWN));
-		TaskMaster.syncTimer("MobPoolSpawner", new MobPoolSpawnTimer(), 500);
+		TaskMaster.syncTimer("MobPoolSpawner", new MobPoolSpawnTimer(), TimeTools.toTicks(1));
 		//TODO from furnex
 		TaskMaster.asyncTimer("GlobalTickEvent", new GlobalTickEvent(), 0L, TimeTools.toTicks(30L));
 		TaskMaster.syncTimer("ValidateAll", new ValidateAll(), TimeTools.toTicks(10800L));

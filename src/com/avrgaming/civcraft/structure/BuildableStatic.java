@@ -83,7 +83,7 @@ public class BuildableStatic {
 		if (tpl == null) return;
 
 		centerLoc = repositionCenterStatic(centerLoc, info.templateYShift, tpl);
-		//validate(player, null, tpl, centerLoc, callback);
+//		validate(player, null, tpl, centerLoc, callback);
 		TaskMaster.asyncTask(new StructureValidator(player, tpl.getFilepath(), centerLoc, callback), 0);
 	}
 

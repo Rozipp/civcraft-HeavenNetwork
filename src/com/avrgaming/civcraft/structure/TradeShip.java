@@ -104,9 +104,8 @@ public class TradeShip extends WaterStructure {
 	}
 
 	private void processCommandSigns(Template tpl, BlockCoord corner) {
-		for (BlockCoord relativeCoord : tpl.commandBlockRelativeLocations) {
-			SimpleBlock sb = tpl.blocks[relativeCoord.getX()][relativeCoord.getY()][relativeCoord.getZ()];
-			BlockCoord absCoord = new BlockCoord(corner.getBlock().getRelative(relativeCoord.getX(), relativeCoord.getY(), relativeCoord.getZ()));
+		for (SimpleBlock sb : tpl.commandBlockRelativeLocations) {
+			BlockCoord absCoord = new BlockCoord(corner.getBlock().getRelative(sb.getX(), sb.getY(), sb.getZ()));
 
 			switch (sb.command) {
 				case "/incoming" : {

@@ -17,7 +17,7 @@ public class BuildTemplateTask implements Runnable {
 	private Queue<SimpleBlock> syncBlockQueue = new LinkedList<SimpleBlock>();
 	int builtBlockCount = 0;
 
-	private final int MAX_BLOCKS_PER_TICK = CivSettings.civConfig.getInt("sync_build_update_task");;
+	private final int MAX_BLOCKS_PER_TICK = CivSettings.getIntBase("sync_build_update_task");
 	private final int DELAY_SPEED = 20;
 
 	public BuildTemplateTask(Template tpl, BlockCoord cornerBlock) {
@@ -25,10 +25,10 @@ public class BuildTemplateTask implements Runnable {
 		this.cornerBlock = cornerBlock;
 	}
 
-	private void one(boolean solidBlock, Template undo_tpl, int y) throws InterruptedException {
-		for (int x = 0; x < undo_tpl.size_x; x++) {
-			for (int z = 0; z < undo_tpl.size_z; z++) {
-				SimpleBlock sb = (solidBlock) ? new SimpleBlock(1, 0) : undo_tpl.blocks[x][y][z];
+	private void oneLayer(boolean solidBlock, Template tpl, int y) throws InterruptedException {
+		for (int x = 0; x < tpl.size_x; x++) {
+			for (int z = 0; z < tpl.size_z; z++) {
+				SimpleBlock sb = (solidBlock) ? new SimpleBlock(1, 0) : tpl.blocks[x][y][z];
 				builtBlockCount++;
 				/*
 				 * We're resuming an undo task after reboot and this block is already built. Or
@@ -60,12 +60,12 @@ public class BuildTemplateTask implements Runnable {
 	public void run() {
 		try {
 
-			/* For 1.0 Templates, SimpleBlocks are inside 3D array called 'blocks' */
-			one(true, tpl, tpl.size_y - 1);
+			oneLayer(true, tpl, tpl.size_y - 1); // Для того что бы не сыпался песок сверху. Верхний слой устанавливается на
+											// камень.
 			for (int y = tpl.size_y - 2; y >= 0; y--) {
-				one(false, tpl, y);
+				oneLayer(false, tpl, y);
 			}
-			one(false, tpl, tpl.size_y - 1);
+			oneLayer(false, tpl, tpl.size_y - 1); // убераем верхний слой
 
 			/* Build last remaining blocks. */
 			SyncBuildUpdateTask.queueSimpleBlock(syncBlockQueue);

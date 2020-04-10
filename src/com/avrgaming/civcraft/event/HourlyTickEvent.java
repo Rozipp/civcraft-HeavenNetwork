@@ -21,9 +21,8 @@ package com.avrgaming.civcraft.event;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-
-import com.avrgaming.civcraft.village.VillageHourlyTick;
 import com.avrgaming.civcraft.config.CivSettings;
+import com.avrgaming.civcraft.construct.VillageHourlyTick;
 import com.avrgaming.civcraft.exception.InvalidConfiguration;
 import com.avrgaming.civcraft.main.CivGlobal;
 import com.avrgaming.civcraft.main.CivLog;

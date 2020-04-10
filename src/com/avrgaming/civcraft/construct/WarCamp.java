@@ -1,4 +1,4 @@
-package com.avrgaming.civcraft.village;
+package com.avrgaming.civcraft.construct;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,17 +28,14 @@ import com.avrgaming.civcraft.main.CivData;
 import com.avrgaming.civcraft.main.CivGlobal;
 import com.avrgaming.civcraft.main.CivLog;
 import com.avrgaming.civcraft.main.CivMessage;
-import com.avrgaming.civcraft.object.ConstructDamageBlock;
 import com.avrgaming.civcraft.object.ControlPoint;
 import com.avrgaming.civcraft.object.Resident;
 import com.avrgaming.civcraft.object.Civilization;
-import com.avrgaming.civcraft.object.ConstructBlock;
 import com.avrgaming.civcraft.object.Town;
 import com.avrgaming.civcraft.object.TownChunk;
 import com.avrgaming.civcraft.permission.PlotPermissions;
 import com.avrgaming.civcraft.sessiondb.SessionEntry;
 import com.avrgaming.civcraft.structure.BuildableStatic;
-import com.avrgaming.civcraft.structure.Construct;
 import com.avrgaming.civcraft.structure.RespawnLocationHolder;
 import com.avrgaming.civcraft.template.Template;
 import com.avrgaming.civcraft.threading.TaskMaster;
@@ -203,9 +200,8 @@ public class WarCamp extends Construct implements RespawnLocationHolder {
 
 	}
 	private void processCommandSigns(Template tpl, BlockCoord corner) {
-		for (BlockCoord relativeCoord : tpl.commandBlockRelativeLocations) {
-			SimpleBlock sb = tpl.blocks[relativeCoord.getX()][relativeCoord.getY()][relativeCoord.getZ()];
-			BlockCoord absCoord = new BlockCoord(corner.getBlock().getRelative(relativeCoord.getX(), relativeCoord.getY(), relativeCoord.getZ()));
+		for (SimpleBlock sb : tpl.commandBlockRelativeLocations) {
+			BlockCoord absCoord = new BlockCoord(corner.getBlock().getRelative(sb.getX(), sb.getY(), sb.getZ()));
 
 			switch (sb.command) {
 				case "/respawn" :
@@ -323,7 +319,7 @@ public class WarCamp extends Construct implements RespawnLocationHolder {
 					if (tpl.blocks[x][y][z].specialType == Type.LITERAL) {
 						// Adding a command block for literal sign placement
 						tpl.blocks[x][y][z].command = "/literal";
-						tpl.commandBlockRelativeLocations.add(new BlockCoord(cornerBlock.getWorld().getName(), x, y, z));
+						tpl.commandBlockRelativeLocations.add(tpl.blocks[x][y][z]);
 						continue;
 					}
 
@@ -585,5 +581,11 @@ public class WarCamp extends Construct implements RespawnLocationHolder {
 	@Override
 	public String getDisplayName() {
 		return "WarCamp";
+	}
+
+	@Override
+	public void commandBlockRelatives(BlockCoord absCoord, SimpleBlock sb) {
+		// TODO Автоматически созданная заглушка метода
+		
 	}
 }

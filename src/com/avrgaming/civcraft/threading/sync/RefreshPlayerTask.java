@@ -2,12 +2,13 @@ package com.avrgaming.civcraft.threading.sync;
 
 import org.bukkit.scheduler.*;
 import com.avrgaming.civcraft.object.*;
-import com.avrgaming.civcraft.village.*;
 
 import org.bukkit.entity.*;
 import org.bukkit.plugin.*;
 import java.util.*;
 import com.avrgaming.civcraft.config.*;
+import com.avrgaming.civcraft.construct.Village;
+
 import org.bukkit.*;
 import com.avrgaming.civcraft.main.*;
 

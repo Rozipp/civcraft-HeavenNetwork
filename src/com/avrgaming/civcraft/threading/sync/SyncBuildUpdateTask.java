@@ -23,7 +23,7 @@ import com.avrgaming.civcraft.util.SimpleBlock;
 
 public class SyncBuildUpdateTask implements Runnable {
 
-	public static int UPDATE_LIMIT = CivSettings.civConfig.getInt("sync_build_update_task");
+	public static int UPDATE_LIMIT = CivSettings.getIntBase("sync_build_update_task");
 
 	private static Queue<SimpleBlock> updateBlocks = new LinkedList<SimpleBlock>();
 
@@ -33,9 +33,11 @@ public class SyncBuildUpdateTask implements Runnable {
 		buildBlockLock.lock();
 		try {
 			updateBlocks.addAll(sbList);
+			CivLog.debug("added " + sbList.size() + ". Now  pullsize = " + updateBlocks.size());
 		} finally {
 			buildBlockLock.unlock();
 		}
+
 	}
 
 	public SyncBuildUpdateTask() {
@@ -51,7 +53,6 @@ public class SyncBuildUpdateTask implements Runnable {
 			return;
 		if (buildBlockLock.tryLock()) {
 			try {
-				CivLog.debug("Update block " + updateBlocks.size());
 				for (int i = 0; i < UPDATE_LIMIT; i++) {
 					SimpleBlock sb = updateBlocks.poll();
 					if (sb == null)

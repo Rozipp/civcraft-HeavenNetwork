@@ -13,8 +13,8 @@ import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
+import com.avrgaming.civcraft.construct.Construct;
 import com.avrgaming.civcraft.structure.Buildable;
-import com.avrgaming.civcraft.structure.Construct;
 import com.avrgaming.civcraft.threading.TaskMaster;
 import lombok.Getter;
 import lombok.Setter;

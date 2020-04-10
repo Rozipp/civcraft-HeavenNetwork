@@ -53,6 +53,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import com.avrgaming.civcraft.config.CivSettings;
 import com.avrgaming.civcraft.config.ConfigTechPotion;
+import com.avrgaming.civcraft.construct.Village;
 import com.avrgaming.civcraft.items.CustomMaterial;
 import com.avrgaming.civcraft.main.CivCraft;
 import com.avrgaming.civcraft.main.CivData;
@@ -77,13 +78,13 @@ import com.avrgaming.civcraft.util.ChunkCoord;
 import com.avrgaming.civcraft.util.CivColor;
 import com.avrgaming.civcraft.util.ItemManager;
 import com.avrgaming.civcraft.util.TagManager;
-import com.avrgaming.civcraft.village.Village;
 import com.avrgaming.civcraft.war.War;
 import com.avrgaming.civcraft.war.WarStats;
 
 public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerPickup(EntityPickupItemEvent event) {
+		if (event.isCancelled()) return;
 		if (event.getEntity() instanceof Player) {
 			Player player = (Player) event.getEntity();
 			String name;
@@ -129,7 +130,7 @@ public class PlayerListener implements Listener {
 	public void OnPlayerJoinEvent(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		Resident resident = CivGlobal.getResident(player);
-		resident.setUnitObjectId(0);
+		if (resident != null) resident.setUnitObjectId(0);
 		UnitStatic.removeChildrenItems(player);
 		UnitStatic.updateUnitForPlaeyr(player);
 		UnitStatic.setModifiedMovementSpeed(player);

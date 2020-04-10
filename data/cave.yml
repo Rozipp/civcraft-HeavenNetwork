@@ -4,23 +4,6 @@
 # The trade goods are divided into two lists, land goods and water goods.
 # Configuration for them is identical, however as you might expect... water 
 # goods never spawn on land and land goods never spawn on water.
-#
-#
-#
-
-######## Global Trade Good Options #######
-
-# Number of days before repo. When goodies are
-# repo'd they go back to the trade outpost that spawned them.
-# 1 = Sunday
-# 7 = Saturday
-trade_goodie_repo_day: 7
-# Time of day that the repo will occur
-# 0 = Midnight
-# 12 = Noon
-trade_goodie_repo_hour: 14
-
-
 
 ########### Trade Good Generation Options #######
 generation:
@@ -39,85 +22,8 @@ generation:
     # Random seed for trade good locations
     seed: 2520150148
 
-# Hemispheres, valid ranges that trade goods can spawn in.
-# The the minecraft world...
-#  north direction is z-
-#  south direction is z+
-#  west direction is x-
-#  east direction is x+
-#  By using 0 as a min or max means you dont care.
-hemispheres:
-      # The following hemisphere is north.
-      # We dont care about x (east/west) so
-      # they are zero.
-      # the z_min (how far negative we can go) do dont
-      # care about, so it is also zero.
-      # the z_max is set to -400 so that we must be greater than -400 to
-      # registered as a northern hemisphere.
-    - id: 'hemi_north'
-      x_min: 0
-      x_max: 0
-      z_min: 0
-      z_max: -200
-        
-    - id: 'hemi_south'
-      x_min: 0
-      x_max: 0
-      z_min: 200
-      z_max: 0
-      
-    - id: 'hemi_east'
-      x_min: 200
-      x_max: 0
-      z_min: 0
-      z_max: 0
-
-    - id: 'hemi_west'
-      x_min: 0
-      x_max: -200
-      z_min: 0
-      z_max: 0
-
-    # Overlapping hemishperes are OK.
-    - id: 'hemi_equator'
-      x_min: 0
-      x_max: 0
-      z_min: -200
-      z_max: 200
-
-    - id: 'hemi_northeast'
-      x_min: 200
-      x_max: 0
-      z_min: 0
-      z_max: -200
-
-    - id: 'hemi_northwest'
-      x_min: 0
-      x_max: -200
-      z_min: 0
-      z_max: -200
-
-    - id: 'hemi_southwest'
-      x_min: 0
-      x_max: -200
-      z_min: 200
-      z_max: 0
-
-    - id: 'hemi_southeast'
-      x_min: 200
-      x_max: 0
-      z_min: 200
-      z_max: 0
-
 ########## Trade Good Types #######
-# id - unquie ID to identify this good
-# name - Display name shown on goods and messages
-# rarity - a Goodie's rarity value. Higher values are rarer (range 1-4)
-# value - amount of base coins this good generates
-# buffs - list of buff id's that this trade good is using. (See buffs.yml)
-# material - item id of in-game item used for visuals.
-# material_data - data value of in-game item used for visuals.
-#
+# id - unquie ID to identify this cave
 #
 
 
@@ -129,9 +35,11 @@ cave_entranse:
     - id: 'f_cave1'
       name: 'Шахта с лавой'
       template: 'cave1'
+      template_entrance: 'entrance1'
       type: 1
-      type_mobs: 'leasser_yobo'
-      treasure:
+      mobs: 'leeser_yobo'
+      rarity: 1
+      transmuter_recipe:
           - material: 'mat_crafted_leather'
             count: 2
             rate: 10

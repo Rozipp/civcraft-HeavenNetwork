@@ -12,6 +12,9 @@ import java.util.Iterator;
 
 import com.avrgaming.civcraft.config.CivSettings;
 import com.avrgaming.civcraft.config.ConfigMarketItem;
+import com.avrgaming.civcraft.construct.Cave;
+import com.avrgaming.civcraft.construct.ConstructSign;
+import com.avrgaming.civcraft.construct.Village;
 import com.avrgaming.civcraft.database.ConnectionPool;
 import com.avrgaming.civcraft.event.EventTimer;
 import com.avrgaming.civcraft.exception.InvalidConfiguration;
@@ -27,7 +30,6 @@ import com.avrgaming.civcraft.object.Relation;
 import com.avrgaming.civcraft.object.Report;
 import com.avrgaming.civcraft.object.Resident;
 import com.avrgaming.civcraft.object.SQLObject;
-import com.avrgaming.civcraft.object.ConstructSign;
 import com.avrgaming.civcraft.object.Town;
 import com.avrgaming.civcraft.object.TownChunk;
 import com.avrgaming.civcraft.object.TradeGood;
@@ -41,7 +43,6 @@ import com.avrgaming.civcraft.structure.wonders.Wonder;
 import com.avrgaming.civcraft.threading.TaskMaster;
 import com.avrgaming.civcraft.units.UnitObject;
 import com.avrgaming.civcraft.util.BiomeCache;
-import com.avrgaming.civcraft.village.Village;
 import com.avrgaming.global.perks.PerkManager;
 import com.avrgaming.global.scores.ScoreManager;
 
@@ -101,6 +102,7 @@ public class SQL {
 		PermissionGroup.init();
 		Coalition.init();
 		TradeGood.init();
+		Cave.init();
 		UnitObject.init();
 		ProtectedBlock.init();
 		BonusGoodie.init();

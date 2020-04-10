@@ -15,8 +15,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import com.avrgaming.civcraft.village.Village;
 import com.avrgaming.civcraft.config.CivSettings;
+import com.avrgaming.civcraft.construct.Construct;
+import com.avrgaming.civcraft.construct.Village;
 import com.avrgaming.civcraft.exception.CivException;
 import com.avrgaming.civcraft.main.CivGlobal;
 import com.avrgaming.civcraft.main.CivMessage;
@@ -26,7 +27,6 @@ import com.avrgaming.civcraft.object.Relation;
 import com.avrgaming.civcraft.object.Resident;
 import com.avrgaming.civcraft.object.Town;
 import com.avrgaming.civcraft.object.TownChunk;
-import com.avrgaming.civcraft.structure.Construct;
 import com.avrgaming.civcraft.util.AsciiMap;
 import com.avrgaming.civcraft.util.ChunkCoord;
 import com.avrgaming.civcraft.util.CivColor;

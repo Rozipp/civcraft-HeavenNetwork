@@ -12,6 +12,11 @@ import com.avrgaming.civcraft.cache.ArrowFiredCache;
 import com.avrgaming.civcraft.cache.CannonFiredCache;
 import com.avrgaming.civcraft.cache.CivCache;
 import com.avrgaming.civcraft.config.CivSettings;
+import com.avrgaming.civcraft.construct.Construct;
+import com.avrgaming.civcraft.construct.ConstructBlock;
+import com.avrgaming.civcraft.construct.ConstructChest;
+import com.avrgaming.civcraft.construct.ConstructSign;
+import com.avrgaming.civcraft.construct.Village;
 import com.avrgaming.civcraft.exception.CivException;
 import com.avrgaming.civcraft.exception.InvalidConfiguration;
 import com.avrgaming.civcraft.main.CivData;
@@ -22,9 +27,6 @@ import com.avrgaming.civcraft.mythicmob.MobStatic;
 import com.avrgaming.civcraft.object.ControlPoint;
 import com.avrgaming.civcraft.object.ProtectedBlock;
 import com.avrgaming.civcraft.object.Resident;
-import com.avrgaming.civcraft.object.ConstructBlock;
-import com.avrgaming.civcraft.object.ConstructChest;
-import com.avrgaming.civcraft.object.ConstructSign;
 import com.avrgaming.civcraft.object.TownChunk;
 import com.avrgaming.civcraft.permission.PlotPermissions;
 import com.avrgaming.civcraft.structure.Buildable;
@@ -32,7 +34,6 @@ import com.avrgaming.civcraft.structure.BuildableLayer;
 import com.avrgaming.civcraft.structure.BuildableStatic;
 // import com.avrgaming.civcraft.structure.CannonShip;
 import com.avrgaming.civcraft.structure.CannonTower;
-import com.avrgaming.civcraft.structure.Construct;
 import com.avrgaming.civcraft.structure.Farm;
 import com.avrgaming.civcraft.structure.Pasture;
 import com.avrgaming.civcraft.structure.Road;
@@ -52,7 +53,6 @@ import com.avrgaming.civcraft.util.ChunkCoord;
 import com.avrgaming.civcraft.util.CivColor;
 import com.avrgaming.civcraft.util.ItemFrameStorage;
 import com.avrgaming.civcraft.util.ItemManager;
-import com.avrgaming.civcraft.village.Village;
 import com.avrgaming.civcraft.war.War;
 import com.avrgaming.civcraft.war.WarRegen;
 
@@ -654,10 +654,10 @@ public class BlockListener implements Listener {
 			event.setCancelled(true);
 			if (bb.getOwner() instanceof Village)
 				CivMessage.sendError(event.getPlayer(), CivSettings.localize.localizedString("blockBreak_errorVillage1") + " " + bb.getOwner().getDisplayName() + " "
-						+ CivSettings.localize.localizedString("blockBreak_errorOwnedBy") + " " + bb.getOwner().getTown().getName());
+						+ CivSettings.localize.localizedString("blockBreak_errorOwnedBy"));
 			else
 				CivMessage.sendError(event.getPlayer(), CivSettings.localize.localizedString("blockBreak_errorStructure") + " " + bb.getOwner().getDisplayName()
-						+ " " + CivSettings.localize.localizedString("blockBreak_errorOwnedBy") + " " + bb.getTown().getName());
+						+ " " + CivSettings.localize.localizedString("blockBreak_errorOwnedBy"));
 			return;
 		}
 
@@ -1044,7 +1044,6 @@ public class BlockListener implements Listener {
 			bcoord.setFromLocation(event.getClickedBlock().getLocation());
 			ConstructSign sign = CivGlobal.getConstructSign(bcoord);
 			if (sign != null) {
-
 				if (leftClick || sign.isAllowRightClick()) {
 					if (sign.getOwner() != null && sign.getOwner().isActive()) {
 						try {

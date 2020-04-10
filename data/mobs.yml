@@ -44,7 +44,7 @@ mobs:
 
 drops:
 #########   YOBO   #########
-   - id: lesser_yobo
+   - id: Lesser_yobo
      drop:
         - mat_forged_clay 0.1
         - mat_crafted_reeds 0.1

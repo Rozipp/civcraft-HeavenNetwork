@@ -7,9 +7,9 @@ import java.util.Map;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
+import com.avrgaming.civcraft.construct.Village;
 import com.avrgaming.civcraft.main.CivLog;
 import com.avrgaming.civcraft.main.CivMessage;
-import com.avrgaming.civcraft.village.Village;
 
 public class ConfigVillageUpgrade {
 

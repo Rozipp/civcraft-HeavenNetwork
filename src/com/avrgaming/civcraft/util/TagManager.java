@@ -2,13 +2,13 @@ package com.avrgaming.civcraft.util;
 
 import org.bukkit.entity.Player;
 
+import com.avrgaming.civcraft.construct.Village;
 import com.avrgaming.civcraft.main.CivGlobal;
 import com.avrgaming.civcraft.object.Civilization;
 import com.avrgaming.civcraft.object.Resident;
 import com.avrgaming.civcraft.object.Town;
 //import com.avrgaming.civcraft.permission.PermissionGroup;
 import com.avrgaming.civcraft.permission.PermissionGroup;
-import com.avrgaming.civcraft.village.Village;
 
 import org.apache.commons.lang.*;
 import java.util.regex.*;

@@ -1,4 +1,4 @@
-package com.avrgaming.civcraft.structure;
+package com.avrgaming.civcraft.construct;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,15 +34,15 @@ import com.avrgaming.civcraft.main.CivData;
 import com.avrgaming.civcraft.main.CivGlobal;
 import com.avrgaming.civcraft.main.CivLog;
 import com.avrgaming.civcraft.object.Civilization;
-import com.avrgaming.civcraft.object.ConstructChest;
-import com.avrgaming.civcraft.object.ConstructDamageBlock;
-import com.avrgaming.civcraft.object.ConstructSign;
 import com.avrgaming.civcraft.object.ProtectedBlock;
 import com.avrgaming.civcraft.object.Resident;
 import com.avrgaming.civcraft.object.SQLObject;
 import com.avrgaming.civcraft.object.Town;
 import com.avrgaming.civcraft.object.TownChunk;
 import com.avrgaming.civcraft.permission.PlotPermissions;
+import com.avrgaming.civcraft.structure.BuildableStatic;
+import com.avrgaming.civcraft.structure.RoadBlock;
+import com.avrgaming.civcraft.structure.Structure;
 import com.avrgaming.civcraft.template.Template;
 import com.avrgaming.civcraft.threading.CivAsyncTask;
 import com.avrgaming.civcraft.threading.TaskMaster;
@@ -53,7 +53,6 @@ import com.avrgaming.civcraft.util.FireworkEffectPlayer;
 import com.avrgaming.civcraft.util.ItemManager;
 import com.avrgaming.civcraft.util.SimpleBlock;
 import com.avrgaming.civcraft.util.SimpleBlock.Type;
-import com.avrgaming.civcraft.village.Village;
 import com.wimbli.WorldBorder.BorderData;
 import com.wimbli.WorldBorder.Config;
 
@@ -75,10 +74,16 @@ public abstract class Construct extends SQLObject {
 
 	private Map<BlockCoord, ConstructSign> сonstructSigns = new ConcurrentHashMap<BlockCoord, ConstructSign>();
 	private Map<BlockCoord, ConstructChest> сonstructChests = new ConcurrentHashMap<BlockCoord, ConstructChest>();
-	/** служит замком для рецептов трасмутера, а так же испольжуеться во время проверки активных рецептов */
+	/**
+	 * служит замком для рецептов трасмутера, а так же испольжуеться во время
+	 * проверки активных рецептов
+	 */
 	public HashMap<String, ReentrantLock> transmuterLocks = new HashMap<>();
 
-	/* Used to keep track of which blocks belong to this buildable so they can be removed when the buildable is removed. */
+	/*
+	 * Used to keep track of which blocks belong to this buildable so they can be
+	 * removed when the buildable is removed.
+	 */
 	protected Map<BlockCoord, Boolean> constructBlocks = new ConcurrentHashMap<BlockCoord, Boolean>();
 	private Location centerLocation;
 
@@ -87,74 +92,108 @@ public abstract class Construct extends SQLObject {
 	public String getHash() {
 		return corner.toString();
 	}
+
 	public Resident getOwnerResident() {
-		if (SQLOwner == null) return null;
-		if (SQLOwner instanceof Resident) return (Resident) SQLOwner;
+		if (SQLOwner == null)
+			return null;
+		if (SQLOwner instanceof Resident)
+			return (Resident) SQLOwner;
 		return null;
 	}
+
 	public Construct getOwnerConstruct() {
-		if (SQLOwner == null) return null;
-		if (SQLOwner instanceof Construct) return (Construct) SQLOwner;
+		if (SQLOwner == null)
+			return null;
+		if (SQLOwner instanceof Construct)
+			return (Construct) SQLOwner;
 		return null;
 	}
+
 	public Town getTown() {
-		if (SQLOwner == null) return null;
-		if (SQLOwner instanceof Construct) return ((Construct) SQLOwner).getTown();
-		if (SQLOwner instanceof Town) return (Town) SQLOwner;
-		if (SQLOwner instanceof Resident) return ((Resident) SQLOwner).getTown();
+		if (SQLOwner == null)
+			return null;
+		if (SQLOwner instanceof Construct)
+			return ((Construct) SQLOwner).getTown();
+		if (SQLOwner instanceof Town)
+			return (Town) SQLOwner;
+		if (SQLOwner instanceof Resident)
+			return ((Resident) SQLOwner).getTown();
 		return null;
 	}
+
 	public Civilization getCiv() {
-		if (SQLOwner == null) return null;
-		if (SQLOwner instanceof Construct) return ((Construct) SQLOwner).getCiv();
-		if (SQLOwner instanceof Town) return ((Town) SQLOwner).getCiv();
-		if (SQLOwner instanceof Civilization) return (Civilization) SQLOwner;
-		if (SQLOwner instanceof Resident) return ((Resident) SQLOwner).getCiv();
+		if (SQLOwner == null)
+			return null;
+		if (SQLOwner instanceof Construct)
+			return ((Construct) SQLOwner).getCiv();
+		if (SQLOwner instanceof Town)
+			return ((Town) SQLOwner).getCiv();
+		if (SQLOwner instanceof Civilization)
+			return (Civilization) SQLOwner;
+		if (SQLOwner instanceof Resident)
+			return ((Resident) SQLOwner).getCiv();
 		return null;
 	}
+
 	// ---------------- get ConfigBuildableInfo
 	public abstract String getDisplayName();
+
 	public int getMaxHitPoints() {
 		return 0;
 	}
+
 	public int getRegenRate() {
 		return 0;
 	}
+
 	public double getUpkeepCost() {
 		return 0;
 	}
+
 	public int getTemplateYShift() {
 		return 0;
 	}
+
 	public boolean allowDemolish() {
 		return true;
 	}
+
 	public boolean isDestroyable() {
 		return true;
 	}
+
 	public int getLimit() {
 		return 0;
 	}
+
 	public boolean isStrategic() {
 		return false;
 	}
+
 	public Component getComponent(String name) {
 		for (Component comp : this.attachedComponents) {
-			if (comp.getName().equals(name)) return comp;
+			if (comp.getName().equals(name))
+				return comp;
 		}
 		return null;
 	}
+
 	public void setTemplate(Template tpl) {
-		if (tpl == null) {
-			this.setCenterLocation(this.getCorner().getLocation());
-		} else
-			this.setCenterLocation(this.getCorner().getLocation().add(tpl.size_x / 2, tpl.size_y / 2, tpl.size_z / 2));
+		if (this.getCorner() != null) {
+			if (tpl == null) {
+				this.setCenterLocation(this.getCorner().getLocation());
+			} else
+				this.setCenterLocation(
+						this.getCorner().getLocation().add(tpl.size_x / 2, tpl.size_y / 2, tpl.size_z / 2));
+		}
 		this.template = tpl;
 	}
+
 	// ------------- Build ----------------------
 	public Location repositionCenter(Location center, Template tpl) throws CivException {
 		return BuildableStatic.repositionCenterStatic(center, 0, tpl);
 	}
+
 	public void checkBlockPermissionsAndRestrictions(Player player) throws CivException {
 		Block centerBlock = this.getCorner().getBlock();
 		int regionX = this.getTemplate().getSize_x();
@@ -183,7 +222,8 @@ public abstract class Construct extends SQLObject {
 
 //		ignoreBorders = this.isAllowOutsideTown();
 
-		if (!player.isOp()) BuildableStatic.validateDistanceFromSpawn(centerBlock.getLocation());
+		if (!player.isOp())
+			BuildableStatic.validateDistanceFromSpawn(centerBlock.getLocation());
 
 		if (centerBlock.getLocation().getY() >= 255) {
 			throw new CivException(CivSettings.localize.localizedString("buildable_errorTooHigh"));
@@ -201,19 +241,26 @@ public abstract class Construct extends SQLObject {
 			throw new CivException(CivSettings.localize.localizedString("buildable_errorHeightLimit"));
 		}
 
-		/* Check that we're not overlapping with another structure's template outline. */
-		/* XXX this needs to check actual blocks, not outlines cause thats more annoying than actual problems caused by building into each other. */
-		//		Iterator<Entry<BlockCoord, Structure>> iter = CivGlobal.getStructureIterator();
-		//		while(iter.hasNext()) {
-		//			Entry<BlockCoord, Structure> entry = iter.next();
-		//			Structure s = entry.getValue();
-		//			
-		//			if (s.templateBoundingBox != null) {
-		//				if (s.templateBoundingBox.overlaps(this.templateBoundingBox)) {
-		//					throw new CivException("Cannot build structure here as it would overlap with a "+s.getDisplayName());
-		//				}
-		//			}
-		//		}
+		/*
+		 * Check that we're not overlapping with another structure's template outline.
+		 */
+		/*
+		 * XXX this needs to check actual blocks, not outlines cause thats more annoying
+		 * than actual problems caused by building into each other.
+		 */
+		// Iterator<Entry<BlockCoord, Structure>> iter =
+		// CivGlobal.getStructureIterator();
+		// while(iter.hasNext()) {
+		// Entry<BlockCoord, Structure> entry = iter.next();
+		// Structure s = entry.getValue();
+		//
+		// if (s.templateBoundingBox != null) {
+		// if (s.templateBoundingBox.overlaps(this.templateBoundingBox)) {
+		// throw new CivException("Cannot build structure here as it would overlap with
+		// a "+s.getDisplayName());
+		// }
+		// }
+		// }
 
 		onCheckBlockPAR();
 
@@ -224,22 +271,25 @@ public abstract class Construct extends SQLObject {
 				for (int z = 0; z < regionZ; z++) {
 					Block b = centerBlock.getRelative(x, y, z);
 
-					if (ItemManager.getTypeId(b) == CivData.CHEST) throw new CivException(CivSettings.localize.localizedString("cannotBuild_chestInWay"));
+					if (ItemManager.getTypeId(b) == CivData.CHEST)
+						throw new CivException(CivSettings.localize.localizedString("cannotBuild_chestInWay"));
 
 					TownChunk tc = CivGlobal.getTownChunk(b.getLocation());
-					if (tc != null && !tc.perms.hasPermission(PlotPermissions.Type.DESTROY, CivGlobal.getResident(player))) {
+					if (tc != null
+							&& !tc.perms.hasPermission(PlotPermissions.Type.DESTROY, CivGlobal.getResident(player))) {
 						// Make sure we have permission to destroy any block in this area.
-						throw new CivException(
-								CivSettings.localize.localizedString("cannotBuild_needPermissions") + " " + b.getX() + "," + b.getY() + "," + b.getZ());
+						throw new CivException(CivSettings.localize.localizedString("cannotBuild_needPermissions") + " "
+								+ b.getX() + "," + b.getY() + "," + b.getZ());
 					}
 
 					BlockCoord coord = new BlockCoord(b);
 					ChunkCoord chunkCoord = new ChunkCoord(coord.getLocation());
 
 //					if (tradeOutpost == null) {
-					//not building a trade outpost, prevent protected blocks from being destroyed.
+					// not building a trade outpost, prevent protected blocks from being destroyed.
 					ProtectedBlock pb = CivGlobal.getProtectedBlock(coord);
-					if (pb != null) {}
+					if (pb != null) {
+					}
 //					} else {
 //						if (CivGlobal.getTradeGood(coord) != null) {
 //							// Make sure we encompass entire trade good.
@@ -250,10 +300,12 @@ public abstract class Construct extends SQLObject {
 //						}
 //					}
 
-					if (CivGlobal.getConstructBlock(coord) != null) throw new CivException(CivSettings.localize.localizedString("cannotBuild_structureInWay"));
+					if (CivGlobal.getConstructBlock(coord) != null)
+						throw new CivException(CivSettings.localize.localizedString("cannotBuild_structureInWay"));
 					if (CivGlobal.getFarmChunk(new ChunkCoord(coord.getLocation())) != null)
 						throw new CivException(CivSettings.localize.localizedString("cannotBuild_farmInWay"));
-					if (CivGlobal.getWallChunk(chunkCoord) != null) throw new CivException(CivSettings.localize.localizedString("cannotBuild_wallInWay"));
+					if (CivGlobal.getWallChunk(chunkCoord) != null)
+						throw new CivException(CivSettings.localize.localizedString("cannotBuild_wallInWay"));
 					if (CivGlobal.getConstructFromChunk(coord) != null)
 						throw new CivException(CivSettings.localize.localizedString("cannotBuild_structureInWay"));
 
@@ -279,9 +331,11 @@ public abstract class Construct extends SQLObject {
 			rb.getRoad().deleteRoadBlock(rb);
 		}
 	}
+
 	public void onCheckBlockPAR() throws CivException {
 		/* Override in children */
 	}
+
 	public void repairFromTemplate() throws IOException, CivException {
 		Template tpl = this.getTemplate();
 		HashMap<Chunk, Chunk> chunkUpdates = new HashMap<Chunk, Chunk>();
@@ -316,35 +370,52 @@ public abstract class Construct extends SQLObject {
 	// ------------ abstract metods
 	public void onDailyUpdate() {
 	}
+
 	public void onHourlyUpdate(CivAsyncTask task) {
 	}
+
 	public void onMinuteUpdate() {
 	}
+
 	public void onSecondUpdate() {
 	}
+
 	public abstract void processUndo() throws CivException;
+
 	public abstract void build(Player player) throws Exception;
+
 	public abstract String getDynmapDescription();
+
 	public abstract String getMarkerIconName();
+
 	public abstract void onLoad() throws CivException;
+
 	public abstract void onUnload();
+
 	public void onPostBuild(BlockCoord absCoord, SimpleBlock commandBlock) {
 	}
+
 	public boolean showOnDynmap() {
 		return false;
 	}
+
 	public void updateSignText() {
 	}
+
 	public void onDemolish() throws CivException {
 	}
 
 	// ---------------- load
 	public void bindBlocks() {
-		// Called mostly on a reload, determines which blocks should be protected based on the corner
-		// location and the template's size. We need to verify that each block is a part of the template.
-		// We might be able to restore broken/missing structures from here in the future.
+		/*
+		 * Called mostly on a reload, determines which blocks should be protected based
+		 * on the corner location and the template's size. We need to verify that each
+		 * block is a part of the template. We might be able to restore broken/missing
+		 * structures from here in the future.
+		 */
 		Template tpl = this.getTemplate();
-		if (tpl == null) return;
+		if (tpl == null)
+			return;
 //TODO		if (isDestroyable()) return;
 		Construct construct = this;
 		TaskMaster.asyncTask(new Runnable() {
@@ -355,21 +426,24 @@ public abstract class Construct extends SQLObject {
 					for (int z = 0; z < tpl.size_z; z++) {
 						for (int x = 0; x < tpl.size_x; x++) {
 							SimpleBlock sb = tpl.blocks[x][y][z];
-							if (sb.getType() == CivData.AIR) continue;
-							if (sb.specialType == SimpleBlock.Type.COMMAND) continue;
+							if (sb.getType() == CivData.AIR)
+								continue;
+							if (sb.specialType == SimpleBlock.Type.COMMAND)
+								continue;
 
-							BlockCoord bc = new BlockCoord(corner.getWorldname(), corner.getX() + x, corner.getY() + y, corner.getZ() + z);
+							BlockCoord bc = new BlockCoord(corner.getWorldname(), corner.getX() + x, corner.getY() + y,
+									corner.getZ() + z);
 							construct.addConstructBlock(new BlockCoord(bc), (y != 0));
 						}
 					}
 				}
 				/* Re-run the post build on the command blocks we found. */
-				if (construct instanceof Village || construct.isActive()) {
+				if (construct.isActive())
 					construct.postBuildSyncTask();
-				}
 			}
 		}, 100);
 	}
+
 	public void postBuildSyncTask() {
 		Construct constr = this;
 		TaskMaster.syncTask(new Runnable() {
@@ -379,20 +453,19 @@ public abstract class Construct extends SQLObject {
 			}
 		}, 10);
 	}
+
 	public void processCommandSigns() {
 		Template tpl = this.getTemplate();
-		if (!this.isPartOfAdminCiv()) {//TODO если цива админская не ставим двери
-			for (BlockCoord bc : tpl.doorRelativeLocations) {
-				SimpleBlock sb = tpl.blocks[bc.getX()][bc.getY()][bc.getZ()];
-				Block block = this.getCorner().getBlock().getRelative(bc.getX(), bc.getY(), bc.getZ());
+		if (!this.isPartOfAdminCiv()) {// TODO если цива админская не ставим двери
+			for (SimpleBlock sb : tpl.doorRelativeLocations) {
+				Block block = this.getCorner().getBlock().getRelative(sb.getX(), sb.getY(), sb.getZ());
 				if (ItemManager.getTypeId(block) != sb.getType()) {
 					ItemManager.setTypeIdAndData(block, sb.getType(), (byte) sb.getData(), false);
 				}
 			}
 		}
-		for (BlockCoord bc : tpl.attachableLocations) {
-			SimpleBlock sb = tpl.blocks[bc.getX()][bc.getY()][bc.getZ()];
-			Block block = this.getCorner().getBlock().getRelative(bc.getX(), bc.getY(), bc.getZ());
+		for (SimpleBlock sb : tpl.attachableLocations) {
+			Block block = this.getCorner().getBlock().getRelative(sb.getX(), sb.getY(), sb.getZ());
 			if (ItemManager.getTypeId(block) != sb.getType()) {
 				ItemManager.setTypeIdAndData(block, sb.getType(), (byte) sb.getData(), false);
 				if (sb.getType() == CivData.WALL_SIGN || sb.getType() == CivData.SIGN) {
@@ -408,61 +481,72 @@ public abstract class Construct extends SQLObject {
 		this.processValidateCommandBlockRelative();
 		this.updateSignText();
 	}
-	public void commandBlockRelatives(BlockCoord absCoord, SimpleBlock sb) {
-		//Override children
-	};
+
+	/**
+	 * Обрабатывает командные блоки в темплатете которые не вошли в список общих
+	 */
+	public abstract void commandBlockRelatives(BlockCoord absCoord, SimpleBlock sb);
+
 	public void processValidateCommandBlockRelative() {
-		/* Use the location's of the command blocks in the template and the buildable's corner to find their real positions. Then perform any special building
-		 * we may want to do at those locations. */
-		/* These block coords do not point to a location in the world, just a location in the template. */
+		/*
+		 * Use the location's of the command blocks in the template and the buildable's
+		 * corner to find their real positions. Then perform any special building we may
+		 * want to do at those locations.
+		 */
+		/*
+		 * These block coords do not point to a location in the world, just a location
+		 * in the template.
+		 */
 		Template tpl = this.getTemplate();
-		for (BlockCoord relativeCoord : tpl.commandBlockRelativeLocations) {
-			SimpleBlock sb = tpl.blocks[relativeCoord.getX()][relativeCoord.getY()][relativeCoord.getZ()];
+		for (SimpleBlock sb : tpl.commandBlockRelativeLocations) {
 			Block block;
-			BlockCoord absCoord = new BlockCoord(this.getCorner().getBlock().getRelative(relativeCoord.getX(), relativeCoord.getY(), relativeCoord.getZ()));
+			BlockCoord absCoord = new BlockCoord(
+					this.getCorner().getBlock().getRelative(sb.getX(), sb.getY(), sb.getZ()));
 
 			/* Signs and chests should already be handled, look for more exotic things. */
 			switch (sb.command) {
-				case "/sign" :
-					ConstructSign structSign = CivGlobal.getConstructSign(absCoord);
-					if (structSign == null) structSign = new ConstructSign(absCoord, this);
-					block = absCoord.getBlock();
-					ItemManager.setTypeId(block, sb.getType());
-					ItemManager.setData(block, sb.getData());
+			case "/sign":
+				ConstructSign structSign = CivGlobal.getConstructSign(absCoord);
+				if (structSign == null)
+					structSign = new ConstructSign(absCoord, this);
+				block = absCoord.getBlock();
+				ItemManager.setTypeId(block, sb.getType());
+				ItemManager.setData(block, sb.getData());
 
-					structSign.setDirection(ItemManager.getData(block.getState()));
-					for (String key : sb.keyvalues.keySet()) {
-						structSign.setType(key);
-						structSign.setAction(sb.keyvalues.get(key));
-					}
-					structSign.setOwner(this);
-					this.addBuildableSign(structSign);
-					CivGlobal.addConstructSign(structSign);
-					break;
-				case "/chest" :
-					ConstructChest structChest = CivGlobal.getConstructChest(absCoord);
-					if (structChest == null) structChest = new ConstructChest(absCoord, this);
-					structChest.setChestId(sb.keyvalues.get("id"));
-					this.addConstructChest(structChest);
-					CivGlobal.addConstructChest(structChest);
+				structSign.setDirection(ItemManager.getData(block.getState()));
+				for (String key : sb.keyvalues.keySet()) {
+					structSign.setType(key);
+					structSign.setAction(sb.keyvalues.get(key));
+				}
+				structSign.setOwner(this);
+				this.addBuildableSign(structSign);
+				CivGlobal.addConstructSign(structSign);
+				break;
+			case "/chest":
+				ConstructChest structChest = CivGlobal.getConstructChest(absCoord);
+				if (structChest == null)
+					structChest = new ConstructChest(absCoord, this);
+				structChest.setChestId(sb.keyvalues.get("id"));
+				this.addConstructChest(structChest);
+				CivGlobal.addConstructChest(structChest);
 
-					/* Convert sign data to chest data. */
-					block = absCoord.getBlock();
-					if (ItemManager.getTypeId(block) != CivData.CHEST) {
-						byte chestData = CivData.convertSignDataToChestData((byte) sb.getData());
-						ItemManager.setTypeId(block, CivData.CHEST);
-						ItemManager.setData(block, chestData, true);
-					}
-					//XXX походу фикс фурнекса по фиксу поворота сундуков после перезагрузки
-					Chest chest = (Chest) block.getState();
-					MaterialData data = chest.getData();
+				/* Convert sign data to chest data. */
+				block = absCoord.getBlock();
+				if (ItemManager.getTypeId(block) != CivData.CHEST) {
+					byte chestData = CivData.convertSignDataToChestData((byte) sb.getData());
+					ItemManager.setTypeId(block, CivData.CHEST);
+					ItemManager.setData(block, chestData, true);
+				}
+				// XXX походу фикс фурнекса по фиксу поворота сундуков после перезагрузки
+				Chest chest = (Chest) block.getState();
+				MaterialData data = chest.getData();
 //						ItemManager.setData(data, chestData);
-					chest.setData(data);
-					chest.update();
-					break;
-				default :
-					this.commandBlockRelatives(absCoord, sb);
-					break;
+				chest.setData(data);
+				chest.update();
+				break;
+			default:
+				this.commandBlockRelatives(absCoord, sb);
+				break;
 			}
 
 //			switch (sb.command) {
@@ -557,11 +641,14 @@ public abstract class Construct extends SQLObject {
 			this.onPostBuild(absCoord, sb);
 		}
 	}
+
 	public void setTurretLocation(BlockCoord absCoord) {
 	}
+
 	public void addConstructBlock(BlockCoord coord, boolean damageable) {
 		CivGlobal.addConstructBlock(coord, this, damageable);
-		// all we really need is it's key, we'll put in true to make sure this structureBlocks collection is not abused.
+		// all we really need is it's key, we'll put in true to make sure this
+		// structureBlocks collection is not abused.
 		this.constructBlocks.put(coord, true);
 	}
 
@@ -578,6 +665,7 @@ public abstract class Construct extends SQLObject {
 			sign.delete();
 		}
 	}
+
 	public void undoFromTemplate() throws IOException, CivException {
 //		if (this.getTown() != null) {
 //			for (BuildAsyncTask task : this.getTown().build_tasks)
@@ -586,8 +674,8 @@ public abstract class Construct extends SQLObject {
 		String filepath = Template.getUndoFilePath(this.getCorner().toString());
 		File f = new File(filepath);
 		if (!f.exists()) {
-			throw new CivException(
-					CivSettings.localize.localizedString("internalIOException") + " " + CivSettings.localize.localizedString("FileNotFound") + " " + filepath);
+			throw new CivException(CivSettings.localize.localizedString("internalIOException") + " "
+					+ CivSettings.localize.localizedString("FileNotFound") + " " + filepath);
 		}
 		Construct constr = this;
 		TaskMaster.asyncTask(new Runnable() {
@@ -604,16 +692,19 @@ public abstract class Construct extends SQLObject {
 				(new BuildTemplateTask(tpl, constr.getCorner())).run();
 				Template.deleteFilePath(templatePath);
 			}
-		},0);
+		}, 0);
 	}
+
 	public void unbindStructureBlocks() {
 		for (BlockCoord coord : this.constructBlocks.keySet()) {
 			CivGlobal.removeConstructBlock(coord);
 		}
 	}
+
 	public void removeBuildableBlock(BlockCoord coord) {
 		CivGlobal.removeConstructBlock(coord);
-		// all we really need is it's key, we'll put in true to make sure this structureBlocks collection is not abused.
+		// all we really need is it's key, we'll put in true to make sure this
+		// structureBlocks collection is not abused.
 		this.constructBlocks.remove(coord);
 	}
 
@@ -621,12 +712,15 @@ public abstract class Construct extends SQLObject {
 	public void addBuildableSign(ConstructSign s) {
 		this.сonstructSigns.put(s.getCoord(), s);
 	}
+
 	public Collection<ConstructSign> getSigns() {
 		return this.сonstructSigns.values();
 	}
+
 	public ConstructSign getSign(BlockCoord coord) {
 		return this.сonstructSigns.get(coord);
 	}
+
 	public void processSignAction(Player player, ConstructSign sign, PlayerInteractEvent event) throws CivException {
 		CivLog.info("No Sign action for this buildable?:" + this.getDisplayName());
 	}
@@ -635,25 +729,31 @@ public abstract class Construct extends SQLObject {
 	public void addConstructChest(ConstructChest chest) {
 		this.сonstructChests.put(chest.getCoord(), chest);
 	}
+
 	public ArrayList<ConstructChest> getAllChestsById(String id) {
 		ArrayList<ConstructChest> chests = new ArrayList<ConstructChest>();
 		for (ConstructChest chest : this.сonstructChests.values()) {
-			if (chest.getChestId().equalsIgnoreCase(id)) chests.add(chest);
+			if (chest.getChestId().equalsIgnoreCase(id))
+				chests.add(chest);
 		}
 		return chests;
 	}
+
 	public ArrayList<ConstructChest> getAllChestsById(String[] ids) {
 		final ArrayList<ConstructChest> chests = new ArrayList<ConstructChest>();
 		for (final ConstructChest chest : this.сonstructChests.values()) {
 			for (String i : ids) {
-				if (chest.getChestId() == i && chest != null) chests.add(chest);
+				if (chest.getChestId() == i && chest != null)
+					chests.add(chest);
 			}
 		}
 		return chests;
 	}
+
 	public Collection<ConstructChest> getChests() {
 		return this.сonstructChests.values();
 	}
+
 	public Map<BlockCoord, ConstructChest> getAllChests() {
 		return this.сonstructChests;
 	}
@@ -662,9 +762,11 @@ public abstract class Construct extends SQLObject {
 	public double modifyTransmuterChance(Double chance) {
 		return chance;
 	}
+
 	public ArrayList<String> getTransmuterRecipe() {
 		return new ArrayList<String>();
 	}
+
 	public void rebiuldTransmuterRecipe() {
 		this.transmuterLocks.clear();
 		for (String s : this.getTransmuterRecipe()) {
@@ -681,8 +783,10 @@ public abstract class Construct extends SQLObject {
 		percentage *= 100;
 		return (int) percentage;
 	}
+
 	public void damage(int amount) {
-		if (hitpoints == 0) return;
+		if (hitpoints == 0)
+			return;
 		hitpoints -= amount;
 
 		if (hitpoints <= 0) {
@@ -690,13 +794,15 @@ public abstract class Construct extends SQLObject {
 			onDestroy();
 		}
 	}
+
 	public void onDestroy() {
-		//can be overriden in subclasses.
+		// can be overriden in subclasses.
 //		CivMessage.global(CivSettings.localize.localizedString("var_buildable_destroyedAlert", this.getDisplayName(), this.getTown().getName()));
 		this.hitpoints = 0;
 		this.fancyDestroyStructureBlocks();
 		this.save();
 	}
+
 	public void fancyDestroyStructureBlocks() {
 		class SyncTask implements Runnable {
 			@Override
@@ -710,10 +816,14 @@ public abstract class Construct extends SQLObject {
 					for (final ConstructSign sign : сonstructSigns.values())
 						CivGlobal.removeConstructSign(sign);
 
-					if (ItemManager.getTypeId(coord.getBlock()) == CivData.AIR) continue;
-					if (ItemManager.getTypeId(coord.getBlock()) == CivData.CHEST) continue;
-					if (ItemManager.getTypeId(coord.getBlock()) == CivData.SIGN) continue;
-					if (ItemManager.getTypeId(coord.getBlock()) == CivData.WALL_SIGN) continue;
+					if (ItemManager.getTypeId(coord.getBlock()) == CivData.AIR)
+						continue;
+					if (ItemManager.getTypeId(coord.getBlock()) == CivData.CHEST)
+						continue;
+					if (ItemManager.getTypeId(coord.getBlock()) == CivData.SIGN)
+						continue;
+					if (ItemManager.getTypeId(coord.getBlock()) == CivData.WALL_SIGN)
+						continue;
 					if (CivSettings.alwaysCrumble.contains(ItemManager.getTypeId(coord.getBlock()))) {
 						ItemManager.setTypeId(coord.getBlock(), CivData.GRAVEL);
 						continue;
@@ -744,8 +854,8 @@ public abstract class Construct extends SQLObject {
 
 					// Each block has a 0.1% chance of launching an explosion effect
 					if (rand.nextInt(1000) <= 1) {
-						FireworkEffect effect = FireworkEffect.builder().with(org.bukkit.FireworkEffect.Type.BURST).withColor(Color.ORANGE).withColor(Color.RED)
-								.withTrail().withFlicker().build();
+						FireworkEffect effect = FireworkEffect.builder().with(org.bukkit.FireworkEffect.Type.BURST)
+								.withColor(Color.ORANGE).withColor(Color.RED).withTrail().withFlicker().build();
 						FireworkEffectPlayer fePlayer = new FireworkEffectPlayer();
 						for (int i = 0; i < 3; i++) {
 							try {
@@ -760,8 +870,11 @@ public abstract class Construct extends SQLObject {
 		}
 		TaskMaster.syncTask(new SyncTask());
 	}
+
 	public abstract void onDamage(int amount, World world, Player player, BlockCoord coord, ConstructDamageBlock hit);
+
 	public abstract void onDamageNotification(Player player, ConstructDamageBlock hit);
+
 	public void processRegen() {
 		if (!this.isActive()) {
 			/* Do not regen non activate structures. */
@@ -772,7 +885,8 @@ public abstract class Construct extends SQLObject {
 		if (regenRate != 0) {
 			if ((this.getHitpoints() != this.getMaxHitPoints()) && (this.getHitpoints() != 0)) {
 				this.setHitpoints(this.getHitpoints() + regenRate);
-				if (this.getHitpoints() > this.getMaxHitPoints()) this.setHitpoints(this.getMaxHitPoints());
+				if (this.getHitpoints() > this.getMaxHitPoints())
+					this.setHitpoints(this.getMaxHitPoints());
 			}
 		}
 	}
@@ -781,7 +895,8 @@ public abstract class Construct extends SQLObject {
 	public void flashStructureBlocks() {
 		World world = Bukkit.getWorld(this.getCorner().getWorldname());
 		for (BlockCoord coord : constructBlocks.keySet()) {
-			if (CivCraft.civRandom.nextDouble() < 0.3) world.playEffect(coord.getLocation(), Effect.MOBSPAWNER_FLAMES, 0);
+			if (CivCraft.civRandom.nextDouble() < 0.3)
+				world.playEffect(coord.getLocation(), Effect.MOBSPAWNER_FLAMES, 0);
 		}
 	}
 
@@ -793,12 +908,15 @@ public abstract class Construct extends SQLObject {
 	public boolean isPartOfAdminCiv() {
 		return (this.getCiv() != null) && this.getCiv().isAdminCiv();
 	}
+
 	public boolean isActive() {
 		return !isDestroyed() && isEnabled();
 	}
+
 	public boolean isDestroyed() {
 		return (this.getMaxHitPoints() != 0) && (hitpoints == 0);
 	}
+
 	public boolean isCanRestoreFromTemplate() {
 		return true;
 	}

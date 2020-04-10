@@ -32,6 +32,9 @@ import org.bukkit.inventory.ItemStack;
 import com.avrgaming.civcraft.config.CivSettings;
 import com.avrgaming.civcraft.config.ConfigCultureLevel;
 import com.avrgaming.civcraft.config.ConfigTech;
+import com.avrgaming.civcraft.construct.ConstructBlock;
+import com.avrgaming.civcraft.construct.ConstructDamageBlock;
+import com.avrgaming.civcraft.construct.ConstructSign;
 import com.avrgaming.civcraft.exception.CivException;
 import com.avrgaming.civcraft.exception.InvalidConfiguration;
 import com.avrgaming.civcraft.items.BonusGoodie;
@@ -40,12 +43,9 @@ import com.avrgaming.civcraft.main.CivGlobal;
 import com.avrgaming.civcraft.main.CivLog;
 import com.avrgaming.civcraft.main.CivMessage;
 import com.avrgaming.civcraft.object.Buff;
-import com.avrgaming.civcraft.object.ConstructDamageBlock;
-import com.avrgaming.civcraft.object.ConstructSign;
 import com.avrgaming.civcraft.object.Civilization;
 import com.avrgaming.civcraft.object.ControlPoint;
 import com.avrgaming.civcraft.object.Resident;
-import com.avrgaming.civcraft.object.ConstructBlock;
 import com.avrgaming.civcraft.object.Town;
 import com.avrgaming.civcraft.object.TownChunk;
 import com.avrgaming.civcraft.siege.CannonProjectile;
@@ -124,11 +124,10 @@ public class TownHall extends Structure implements RespawnLocationHolder {
 		 * we may want to do at those locations. */
 		/* These block coords do not point to a location in the world, just a location in the template. */
 		Template tpl = this.getTemplate();
-		for (BlockCoord relativeCoord : tpl.commandBlockRelativeLocations) {
-			SimpleBlock sb = tpl.blocks[relativeCoord.getX()][relativeCoord.getY()][relativeCoord.getZ()];
+		for (SimpleBlock sb : tpl.commandBlockRelativeLocations) {
 			ConstructSign structSign;
 			Block block;
-			BlockCoord absCoord = new BlockCoord(this.getCorner().getBlock().getRelative(relativeCoord.getX(), relativeCoord.getY(), relativeCoord.getZ()));
+			BlockCoord absCoord = new BlockCoord(this.getCorner().getBlock().getRelative(sb.getX(), sb.getY(), sb.getZ()));
 
 			/* Signs and chests should already be handled, look for more exotic things. */
 			switch (sb.command) {

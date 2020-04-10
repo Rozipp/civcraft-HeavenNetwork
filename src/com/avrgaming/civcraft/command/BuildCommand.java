@@ -64,7 +64,7 @@ public class BuildCommand extends CommandBase {
 			town.build_tasks.stream().map((task) -> {
 				return task.buildable;
 			}).forEachOrdered((b) -> {
-				double mins = (b.getHammerCost() - b.getBuiltHammers()) / 2.0D / town.getHammers().total * 60.0D;
+				double mins = (b.getHammerCost() - b.getHammersCompleted()) / 2.0D / town.getHammers().total * 60.0D;
 				long timeNow = Calendar.getInstance().getTimeInMillis();
 				double seconds = mins * 60.0D;
 				long end = (long) ((double) timeNow + 1000.0D * seconds);
@@ -204,12 +204,12 @@ public class BuildCommand extends CommandBase {
 			Buildable b = task.buildable;
 			DecimalFormat df = new DecimalFormat();
 			double total = b.getHammerCost();
-			double current = b.getBuiltHammers();
+			double current = b.getHammersCompleted();
 			double builtPercentage = current / total;
 			builtPercentage = Math.round(builtPercentage * 100);
 
 			CivMessage.send(sender, CivColor.LightPurple + b.getDisplayName() + ": " + CivColor.Yellow + builtPercentage + "% (" + df.format(current) + "/"
-					+ total + ")" + CivColor.LightPurple + " Blocks " + CivColor.Yellow + "(" + b.builtBlockCount + "/" + b.getTotalBlockCount() + ")");
+					+ total + ")" + CivColor.LightPurple + " Blocks " + CivColor.Yellow + "(" + b.blocksCompleted + "/" + b.getTotalBlock() + ")");
 
 			//CivMessage.send(sender, CivColor.LightPurple+b.getDisplayName()+" "+CivColor.Yellow+"("+
 			//	b.builtBlockCount+" / "+b.getTotalBlockCount()+")");

@@ -16,9 +16,8 @@
  * is strictly forbidden unless prior written permission is obtained
  * from AVRGAMING LLC.
  */
-package com.avrgaming.civcraft.object;
+package com.avrgaming.civcraft.construct;
 import com.avrgaming.civcraft.main.CivGlobal;
-import com.avrgaming.civcraft.structure.Construct;
 import com.avrgaming.civcraft.util.BlockCoord;
 import lombok.Getter;
 import lombok.Setter;

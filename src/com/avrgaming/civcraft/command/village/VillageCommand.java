@@ -19,6 +19,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.avrgaming.civcraft.command.CommandBase;
 import com.avrgaming.civcraft.config.CivSettings;
+import com.avrgaming.civcraft.construct.Village;
 import com.avrgaming.civcraft.exception.CivException;
 import com.avrgaming.civcraft.exception.InvalidConfiguration;
 import com.avrgaming.civcraft.items.CraftableCustomMaterial;
@@ -29,7 +30,6 @@ import com.avrgaming.civcraft.questions.JoinVillageResponse;
 import com.avrgaming.civcraft.questions.Question;
 import com.avrgaming.civcraft.threading.sync.TeleportPlayerTask;
 import com.avrgaming.civcraft.util.CivColor;
-import com.avrgaming.civcraft.village.Village;
 
 public class VillageCommand extends CommandBase {
 	public static final long INVITE_TIMEOUT = 30000; //30 seconds

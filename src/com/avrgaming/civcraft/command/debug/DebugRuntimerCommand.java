@@ -1,6 +1,7 @@
 package com.avrgaming.civcraft.command.debug;
 
 import com.avrgaming.civcraft.command.CommandBase;
+import com.avrgaming.civcraft.construct.VillageHourlyTick;
 import com.avrgaming.civcraft.exception.CivException;
 import com.avrgaming.civcraft.main.CivMessage;
 import com.avrgaming.civcraft.threading.TaskMaster;
@@ -8,7 +9,6 @@ import com.avrgaming.civcraft.threading.tasks.CultureProcessAsyncTask;
 import com.avrgaming.civcraft.threading.timers.DailyTimer;
 import com.avrgaming.civcraft.threading.timers.EffectEventTimer;
 import com.avrgaming.civcraft.threading.timers.SyncTradeTimer;
-import com.avrgaming.civcraft.village.VillageHourlyTick;
 
 public class DebugRuntimerCommand extends CommandBase{
 

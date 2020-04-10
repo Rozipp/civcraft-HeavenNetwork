@@ -37,8 +37,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.avrgaming.civcraft.village.Village;
 import com.avrgaming.civcraft.config.ConfigEndCondition;
+import com.avrgaming.civcraft.construct.Village;
 import com.avrgaming.civcraft.exception.CivException;
 import com.avrgaming.civcraft.exception.InvalidConfiguration;
 import com.avrgaming.civcraft.items.CraftableCustomMaterial;
@@ -51,7 +51,6 @@ import com.avrgaming.civcraft.mythicmob.ConfigMobs;
 import com.avrgaming.civcraft.object.Town;
 import com.avrgaming.civcraft.randomevents.ConfigRandomEvent;
 import com.avrgaming.civcraft.structure.Wall;
-import com.avrgaming.civcraft.template.Template;
 import com.avrgaming.civcraft.units.ConfigUnit;
 import com.avrgaming.civcraft.units.UnitCustomMaterial;
 import com.avrgaming.civcraft.units.UnitStatic;
@@ -66,7 +65,7 @@ public class CivSettings {
 	public static final long MOB_REMOVE_INTERVAL = 5000;
 	/* Number of days that you can remain in debt before an action occurs. */
 
-	//TODO make this configurable.
+	// TODO make this configurable.
 	public static final int GRACE_DAYS = 3;
 
 	public static final int CIV_DEBT_GRACE_DAYS = 7;
@@ -79,8 +78,8 @@ public class CivSettings {
 	public static boolean hasHoloDisp;
 
 	/* cached for faster access. */
-	//public static float leather_speed;
-	//public static float metal_speed;
+	// public static float leather_speed;
+	// public static float metal_speed;
 
 	public static FileConfiguration townConfig; /* town.yml */
 	public static Map<Integer, ConfigTownLevel> townLevels = new HashMap<Integer, ConfigTownLevel>();
@@ -122,6 +121,9 @@ public class CivSettings {
 	public static Map<String, ConfigTradeGood> waterGoods = new HashMap<String, ConfigTradeGood>();
 	public static Map<String, ConfigHemisphere> hemispheres = new HashMap<String, ConfigHemisphere>();
 
+	public static FileConfiguration caveConfig; /* cave.yml */
+	public static Map<String, ConfigCave> caves = new HashMap<String, ConfigCave>();
+	
 	public static FileConfiguration buffConfig;
 	public static Map<String, ConfigBuff> buffs = new HashMap<String, ConfigBuff>();
 
@@ -234,7 +236,8 @@ public class CivSettings {
 	public static Map<String, ConfigSpaceCraftMat> space_crafts = new HashMap<String, ConfigSpaceCraftMat>();
 	public static Map<Integer, ConfigLabLevel> labLevels = new HashMap<Integer, ConfigLabLevel>();
 
-	public static void init(JavaPlugin plugin) throws FileNotFoundException, IOException, InvalidConfigurationException, InvalidConfiguration {
+	public static void init(JavaPlugin plugin)
+			throws FileNotFoundException, IOException, InvalidConfigurationException, InvalidConfiguration {
 		CivSettings.plugin = (CivCraft) plugin;
 
 		String languageFile = CivSettings.getStringBase("localization_file");
@@ -294,34 +297,37 @@ public class CivSettings {
 		alwaysCrumble.add(CivData.BEACON);
 
 		LoreEnhancement.init();
-		Template.initAttachableTypes();
 		(new File("templates/undo")).mkdirs();
 		(new File("templates/inprogress/")).mkdirs();
 
 		if (CivSettings.plugin.hasPlugin("HolographicDisplays")) {
 			CivSettings.hasHoloDisp = true;
 		} else {
-			CivLog.warning("I can not find find the Holodisply plugin in the plugins. I can not integrate us with holo.");
+			CivLog.warning(
+					"I can not find find the Holodisply plugin in the plugins. I can not integrate us with holo.");
 		}
 		if (CivSettings.plugin.hasPlugin("VanishNoPacket")) {
 			hasVanishNoPacket = true;
 			CivLog.info("VanishNoPacket hooks enabled");
 		} else {
-			CivLog.warning("VanishNoPacket not found, not registering VanishNoPacket hooks. This is fine if you're not using VanishNoPacket.");
+			CivLog.warning(
+					"VanishNoPacket not found, not registering VanishNoPacket hooks. This is fine if you're not using VanishNoPacket.");
 		}
 
 		if (CivSettings.plugin.hasPlugin("TitleAPI")) {
 			hasTitleAPI = true;
 			CivLog.info("TitleAPI hooks enabled");
 		} else {
-			CivLog.warning("TitleAPI not found, not registering TitleAPI hooks. This is fine if you're not using TitleAPI.");
+			CivLog.warning(
+					"TitleAPI not found, not registering TitleAPI hooks. This is fine if you're not using TitleAPI.");
 		}
 
 		if (CivSettings.plugin.hasPlugin("CustomMobs") && CivSettings.getBoolean(spawnersConfig, "enable")) {
 			hasCustomMobs = true;
 			CivLog.info("CustomMobs hooks enabled");
 		} else {
-			CivLog.warning("CustomMobs not found or disabled, not registering CustomMob hooks. This is fine if you're not using Custom Mobs.");
+			CivLog.warning(
+					"CustomMobs not found or disabled, not registering CustomMob hooks. This is fine if you're not using Custom Mobs.");
 		}
 
 		try {
@@ -409,7 +415,8 @@ public class CivSettings {
 //			CivLog.debug("path null");
 //		}
 		File data = new File(plugin.getDataFolder().getPath() + "/data");
-		if (!data.exists()) data.mkdirs();
+		if (!data.exists())
+			data.mkdirs();
 	}
 
 	public static void streamResourceToDisk(String filepath) throws IOException {
@@ -422,7 +429,8 @@ public class CivSettings {
 		}
 	}
 
-	public static FileConfiguration loadCivConfig(String filepath) throws FileNotFoundException, IOException, InvalidConfigurationException {
+	public static FileConfiguration loadCivConfig(String filepath)
+			throws FileNotFoundException, IOException, InvalidConfigurationException {
 		File file = new File(plugin.getDataFolder().getPath() + "/data/" + filepath);
 		if (!file.exists()) {
 			CivLog.warning("Configuration file:" + filepath + " was missing. Streaming to disk from Jar.");
@@ -436,7 +444,8 @@ public class CivSettings {
 		return cfg;
 	}
 
-	public static void reloadGovConfigFiles() throws FileNotFoundException, IOException, InvalidConfigurationException, InvalidConfiguration {
+	public static void reloadGovConfigFiles()
+			throws FileNotFoundException, IOException, InvalidConfigurationException, InvalidConfiguration {
 		CivSettings.governments.clear();
 		governmentConfig = loadCivConfig("governments.yml");
 		ConfigGovernment.loadConfig(governmentConfig, governments);
@@ -449,6 +458,7 @@ public class CivSettings {
 		structureConfig = loadCivConfig("structures.yml");
 		techsConfig = loadCivConfig("techs.yml");
 		goodsConfig = loadCivConfig("goods.yml");
+		caveConfig = loadCivConfig("cave.yml");
 		spawnersConfig = loadCivConfig("spawners.yml");
 		buffConfig = loadCivConfig("buffs.yml");
 		mobsConfig = loadCivConfig("mobs.yml");
@@ -471,7 +481,8 @@ public class CivSettings {
 		soundConfig = loadCivConfig("sound.yml");
 	}
 
-	public static void reloadPerks() throws FileNotFoundException, IOException, InvalidConfigurationException, InvalidConfiguration {
+	public static void reloadPerks()
+			throws FileNotFoundException, IOException, InvalidConfigurationException, InvalidConfiguration {
 		perkConfig = loadCivConfig("perks.yml");
 		ConfigPerk.loadConfig(perkConfig, perks);
 		ConfigPerk.loadTemplates(perkConfig, templates);
@@ -492,6 +503,7 @@ public class CivSettings {
 		ConfigWonderBuff.loadConfig(wonderConfig, wonderBuffs);
 		ConfigMobSpawner.loadConfig(spawnersConfig, spawners, landSpawners, waterSpawners);
 		ConfigTradeGood.loadConfig(goodsConfig, goods, landGoods, waterGoods);
+		ConfigCave.loadConfig(caveConfig, caves);
 		ConfigGrocerLevel.loadConfig(structureConfig, grocerLevels);
 		ConfigAlchLevel.loadConfig(structureConfig, alchLevels);
 		ConfigCottageLevel.loadConfig(structureConfig, cottageLevels);
@@ -537,7 +549,7 @@ public class CivSettings {
 	}
 
 	private static void initRestrictedItems() {
-		// TODO make this configurable? 
+		// TODO make this configurable?
 		restrictedItems.put(Material.FLINT_AND_STEEL, 0);
 		restrictedItems.put(Material.BUCKET, 0);
 		restrictedItems.put(Material.WATER_BUCKET, 0);
@@ -555,7 +567,7 @@ public class CivSettings {
 	}
 
 	private static void initSwitchItems() {
-		//TODO make this configurable?
+		// TODO make this configurable?
 		switchItems.add(Material.ANVIL);
 		switchItems.add(Material.BEACON);
 		switchItems.add(Material.BREWING_STAND);
@@ -573,7 +585,7 @@ public class CivSettings {
 		switchItems.add(Material.FURNACE);
 		switchItems.add(Material.JUKEBOX);
 		switchItems.add(Material.LEVER);
-		//	switchItems.add(Material.LOCKED_CHEST);
+		// switchItems.add(Material.LOCKED_CHEST);
 		switchItems.add(Material.STONE_BUTTON);
 		switchItems.add(Material.STONE_PLATE);
 		switchItems.add(Material.IRON_DOOR);
@@ -582,7 +594,7 @@ public class CivSettings {
 		switchItems.add(Material.WOOD_DOOR);
 		switchItems.add(Material.WOODEN_DOOR);
 		switchItems.add(Material.WOOD_PLATE);
-		//switchItems.put(Material.WOOD_BUTTON, 0); //intentionally left out
+		// switchItems.put(Material.WOOD_BUTTON, 0); //intentionally left out
 
 		// 1.5 additions.
 		switchItems.add(Material.HOPPER);
@@ -612,14 +624,26 @@ public class CivSettings {
 	}
 
 	private static void initBlockPlaceExceptions() {
-		/* These blocks can be placed regardless of permissions. this is currently used only for blocks that are generated by specific events such as portal or
-		 * fire creation. */
+		/*
+		 * These blocks can be placed regardless of permissions. this is currently used
+		 * only for blocks that are generated by specific events such as portal or fire
+		 * creation.
+		 */
 		blockPlaceExceptions.put(Material.FIRE, 0);
 		blockPlaceExceptions.put(Material.PORTAL, 0);
 	}
 
 	public static String getStringBase(String path) throws InvalidConfiguration {
 		return getString(plugin.getConfig(), path);
+	}
+
+	public static Integer getIntBase(String path) {
+		try {
+			return Integer.parseInt(getString(plugin.getConfig(), path));
+		} catch (NumberFormatException | InvalidConfiguration e) {
+			CivLog.error("Not found Base Config Integer: " + path);
+			return 0;
+		}
 	}
 
 	public static double getDoubleTown(String path) throws InvalidConfiguration {
@@ -632,7 +656,8 @@ public class CivSettings {
 
 	public static void saveGenID(String gen_id) {
 		try {
-			Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("plugins/CivCraft/genid.data")));
+			Writer writer = new BufferedWriter(
+					new OutputStreamWriter(new FileOutputStream("plugins/CivCraft/genid.data")));
 			writer.write(gen_id);
 			writer.close();
 		} catch (IOException e) {
@@ -646,7 +671,8 @@ public class CivSettings {
 			BufferedReader br = new BufferedReader(new FileReader("plugins/CivCraft/genid.data"));
 			genid = br.readLine();
 			br.close();
-		} catch (IOException e) {}
+		} catch (IOException e) {
+		}
 		return genid;
 	}
 

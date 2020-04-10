@@ -1,4 +1,4 @@
-package com.avrgaming.civcraft.village;
+package com.avrgaming.civcraft.construct;
 
 import com.avrgaming.civcraft.components.ConsumeLevelComponent;
 import com.avrgaming.civcraft.components.ConsumeLevelComponent.Result;
@@ -15,16 +15,12 @@ import com.avrgaming.civcraft.main.CivData;
 import com.avrgaming.civcraft.main.CivGlobal;
 import com.avrgaming.civcraft.main.CivLog;
 import com.avrgaming.civcraft.main.CivMessage;
-import com.avrgaming.civcraft.object.ConstructDamageBlock;
 import com.avrgaming.civcraft.object.ControlPoint;
 import com.avrgaming.civcraft.object.Resident;
-import com.avrgaming.civcraft.object.ConstructBlock;
-import com.avrgaming.civcraft.object.ConstructChest;
 import com.avrgaming.civcraft.object.TownChunk;
 import com.avrgaming.civcraft.permission.PlotPermissions;
 import com.avrgaming.civcraft.structure.BuildableStatic;
 import com.avrgaming.civcraft.structure.RoadBlock;
-import com.avrgaming.civcraft.structure.Construct;
 import com.avrgaming.civcraft.template.Template;
 import com.avrgaming.civcraft.threading.CivAsyncTask;
 import com.avrgaming.civcraft.threading.TaskMaster;
@@ -447,9 +443,8 @@ public class Village extends Construct {
 		 * we may want to do at those locations. */
 		/* These block coords do not point to a location in the world, just a location in the template. */
 		Template tpl = this.getTemplate();
-		for (BlockCoord relativeCoord : tpl.commandBlockRelativeLocations) {
-			SimpleBlock sb = tpl.blocks[relativeCoord.getX()][relativeCoord.getY()][relativeCoord.getZ()];
-			BlockCoord absCoord = new BlockCoord(corner.getBlock().getRelative(relativeCoord.getX(), relativeCoord.getY(), relativeCoord.getZ()));
+		for (SimpleBlock sb : tpl.commandBlockRelativeLocations) {
+			BlockCoord absCoord = new BlockCoord(corner.getBlock().getRelative(sb.getX(), sb.getY(), sb.getZ()));
 			int level = 0;
 			String annex = null;
 			String chestId = null;
@@ -550,7 +545,6 @@ public class Village extends Construct {
 					break;
 			}
 		}
-		this.updateFirepit();
 	}
 
 	public void updateFirepit() {
@@ -1004,6 +998,7 @@ public class Village extends Construct {
 		}
 		upgrade.processAction(this);
 		this.processCommandSigns();
+		this.updateFirepit();
 		owner.getTreasury().withdraw(upgrade.cost);
 		this.save();
 	}
