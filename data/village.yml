@@ -11,12 +11,11 @@ village:
     # Number of hours a village can survive without coal.
     firepoints: 24
 
-    # Number of coal it takes to revive one hour worth
-    # of village life.
+    # Number of coal it takes to revive one hour worth of village life.
     coal_per_firepoint: 12
-
-    # Template path to the village. Starting from the templates directory.
-    template: 'village'
+    
+    # количество хлеба, которое потребляет второй уровень большого дома в час
+    bread_per_hour_for_second_longhouse: 32
 
     # cost of the village in coins.
     cost: 2500.0
@@ -24,10 +23,10 @@ village:
     # number of hours to let village be raidable
     raid_length: 22
     
-transmuter:
-    - 'sawmill'
-    - 'trommel'
-    - 'orangery'
+transmuter_recipe:
+    - sawmill1
+    - trommel1
+    - orangery1
 
 longhouse_levels:
    - level: 1
@@ -51,17 +50,22 @@ longhouse_levels:
      count: 12
      coins: 80.0
      
+#annex: название пристройки которую улчшает улучшение
+#transmuter_recipe: список рецептов через запутую которые открывает это улучшение. Рецепт должен быть в списке transmuter_recipe
+
 upgrades:
     - id: 'v_up_sawmill'
       name: 'Лесопилка 1-го уровня'
       cost: 500.0
       annex: 'sawmill'
+      transmuter_recipe: 'sawmill1'
       level: 1
       require_upgrade:
     - id: 'v_up_sawmill2'
       name: 'Лесопилка 2-го уровня'
       cost: 5000.0
       annex: 'sawmill'
+      transmuter_recipe: ''
       level: 2
       require_upgrade: 'v_up_sawmill'
 
@@ -69,12 +73,14 @@ upgrades:
       name: 'Каменоломня 1-го уровня'
       cost: 500.0
       annex: 'trommel'
+      transmuter_recipe: 'trommel1'
       level: 1
       require_upgrade:
     - id: 'v_up_trommel2'
       name: 'Каменоломня 2-го уровня'
       cost: 5000.0
       annex: 'trommel'
+      transmuter_recipe: ''
       level: 2
       require_upgrade: 'v_up_trommel1'
 
@@ -82,12 +88,14 @@ upgrades:
       name: 'Оранжерея 1-го уровня'
       cost: 500.0
       annex: 'orangery'
+      transmuter_recipe: 'orangery1'
       level: 1
       require_upgrade:
     - id: 'v_up_orangery2'
       name: 'Оранжерея 2-го уровня'
       cost: 5000.0
       annex: 'orangery'
+      transmuter_recipe: ''
       level: 2
       require_upgrade: 'v_up_orangery1'
 
@@ -114,11 +122,13 @@ upgrades:
       name: 'Большой дом ур.1'
       cost: 500.0
       annex: 'longhouse'
+      transmuter_recipe: 'longhouse'
       level: 1
       require_upgrade:
     - id: 'v_up_longhouse2'
       name: 'Большой дом ур.2'
       cost: 5000.0
       annex: 'longhouse'
+      transmuter_recipe: 'longhouse'
       level: 2
       require_upgrade: 'v_up_longhouse1'

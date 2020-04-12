@@ -38,6 +38,7 @@ cave_entranse:
       template_entrance: 'entrance1'
       type: 1
       mobs: 'leeser_yobo'
+      require_tech: 'tech_hunting'
       rarity: 1
       transmuter_recipe:
           - material: 'mat_crafted_leather'

@@ -37,10 +37,6 @@ public class CaveEntrance extends Construct {
 			ItemManager.setTypeIdAndData(absCoord.getBlock(), sb.getType(), sb.getData(), true);
 
 			structSign.setDirection(ItemManager.getData(absCoord.getBlock().getState()));
-//			for (String key : sb.keyvalues.keySet()) {
-//				structSign.setType(key);
-//				structSign.setAction(sb.keyvalues.get(key));
-//			}
 			structSign.setOwner(this);
 			structSign.setText(new String[] { "", "Нажми", "что бы", "спустится" });
 			structSign.setAction("entrance");

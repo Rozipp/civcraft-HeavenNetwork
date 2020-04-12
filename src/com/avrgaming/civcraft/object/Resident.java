@@ -207,12 +207,14 @@ public class Resident extends SQLObject {
 		this.setName(name);
 		this.uid = uid;
 		this.treasury = CivGlobal.createEconObject(this);
+		this.setGivenKit(false);
 		setTimezoneToServerDefault();
 		loadSettings();
 	}
 
 	public Resident(ResultSet rs) throws SQLException, InvalidNameException {
 		this.load(rs);
+		this.setGivenKit(true);
 		loadSettings();
 	}
 
@@ -235,7 +237,6 @@ public class Resident extends SQLObject {
 					"`debt` double DEFAULT 0," + //
 					"`coins` double DEFAULT 0," + //
 					"`daysTilEvict` mediumint DEFAULT NULL," + //
-					"`givenKit` bool NOT NULL DEFAULT '0'," + //
 					"`village_id` int(11)," + //
 					"`nextTeleport` BIGINT NOT NULL DEFAULT '0'," + //
 					"`nextRefresh` BIGINT NOT NULL DEFAULT '0'," + //
@@ -268,15 +269,10 @@ public class Resident extends SQLObject {
 		this.lastIP = rs.getString("last_ip");
 		this.debugTown = rs.getString("debug_town");
 
-		if (rs.getString("uuid").equalsIgnoreCase("UNKNOWN")) {
-			this.uid = null;
-		} else {
-			this.uid = UUID.fromString(rs.getString("uuid"));
-		}
+		this.uid = (rs.getString("uuid").equalsIgnoreCase("UNKNOWN")) ? null : UUID.fromString(rs.getString("uuid"));
 
 		this.treasury = CivGlobal.createEconObject(this);
 		this.getTreasury().setBalance(rs.getDouble("coins"), false);
-		this.setGivenKit(rs.getBoolean("givenKit"));
 		this.setTimezone(rs.getString("timezone"));
 		this.loadFlagSaveString(rs.getString("flags"));
 		this.lastUnitObjectId = rs.getInt("last_unit_object_id");
@@ -454,7 +450,6 @@ public class Resident extends SQLObject {
 		hashmap.put("debt", this.getTreasury().getDebt());
 		hashmap.put("daysTilEvict", this.getDaysTilEvict());
 		hashmap.put("friends", this.getFriendsSaveString());
-		hashmap.put("givenKit", this.isGivenKit());
 		hashmap.put("coins", this.getTreasury().getBalance());
 		hashmap.put("timezone", this.getTimezone());
 		hashmap.put("flags", this.getFlagSaveString());
@@ -1326,25 +1321,20 @@ public class Resident extends SQLObject {
 	}
 
 	public void teleportHome() {
-		Player player;
 		try {
-			player = CivGlobal.getPlayer(this);
-			teleportHome(player);
+			Player player = CivGlobal.getPlayer(this);
+			if (this.hasTown()) {
+				TownHall townhall = this.getTown().getTownHall();
+				if (townhall != null) {
+					BlockCoord coord = townhall.getRandomRevivePoint();
+					player.teleport(coord.getLocation());
+				}
+			} else {
+				World world = Bukkit.getWorld("world");
+				player.teleport(world.getSpawnLocation());
+			}
 		} catch (CivException e) {
 			return;
-		}
-	}
-
-	public void teleportHome(Player player) {
-		if (this.hasTown()) {
-			TownHall townhall = this.getTown().getTownHall();
-			if (townhall != null) {
-				BlockCoord coord = townhall.getRandomRevivePoint();
-				player.teleport(coord.getLocation());
-			}
-		} else {
-			World world = Bukkit.getWorld("world");
-			player.teleport(world.getSpawnLocation());
 		}
 	}
 

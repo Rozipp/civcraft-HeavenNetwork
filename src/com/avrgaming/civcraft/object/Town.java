@@ -931,9 +931,11 @@ public class Town extends SQLObject {
 			throw new CivException(CivSettings.localize.localizedString("internalException"));
 		}
 
-		UnitObject uo = UnitStatic.getPlayerUnitObject(player);
-		if (uo == null || !uo.getConfigUnitId().equals("u_settler")) {
-			throw new CivException(CivSettings.localize.localizedString("town_found_errorNotSettler"));
+		if (!capitol) {
+			UnitObject uo = UnitStatic.getPlayerUnitObject(player);
+			if (uo == null || !uo.getConfigUnitId().equals("u_settler")) {
+				throw new CivException(CivSettings.localize.localizedString("town_found_errorNotSettler"));
+			}
 		}
 	}
 

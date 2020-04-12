@@ -240,13 +240,7 @@ public class Cave extends Construct {
 			if (resident.getConstructSignConfirm() != null && resident.getConstructSignConfirm().equals(sign)) {
 				CivMessage.send(player,
 						CivColor.LightGreen + CivSettings.localize.localizedString("capitol_respawningAlert"));
-				Resident res = CivGlobal.getResident(player);
-				Location loc;
-				if (res.getTown() != null)
-					loc = res.getTown().getTownHall().getRandomRespawnPoint().getLocation();
-				else
-					loc = Bukkit.getWorld("world").getSpawnLocation();
-				player.teleport(loc);
+				CivGlobal.getResident(player).teleportHome();
 				break;
 			} else {
 				this.showInfo(player);
@@ -271,8 +265,10 @@ public class Cave extends Construct {
 		}
 	}
 
-	private long endTime = 0;
-
+	public void enterCave(Player player) {
+		
+	}
+	
 	@Override
 	public void onSecondUpdate() {
 	}
