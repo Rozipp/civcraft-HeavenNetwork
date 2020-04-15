@@ -40,7 +40,7 @@ import com.avrgaming.civcraft.util.ItemManager;
 import com.avrgaming.civcraft.util.SimpleBlock;
 import com.avrgaming.civcraft.war.War;
 
-public class Capitol extends TownHall {
+public class Capitol extends Townhall {
 
 	private HashMap<Integer, ProjectileArrowComponent> arrowTowers = new HashMap<Integer, ProjectileArrowComponent>();
 	private ConstructSign respawnSign;
@@ -267,7 +267,7 @@ public class Capitol extends TownHall {
 
 		/* Validate that all of the towns in our civ have town halls. If not, then we need to punish by increasing respawn times. */
 		for (Town town : this.getCiv().getTowns()) {
-			TownHall townhall = town.getTownHall();
+			Townhall townhall = town.getTownHall();
 			if (townhall == null) return false;
 		}
 

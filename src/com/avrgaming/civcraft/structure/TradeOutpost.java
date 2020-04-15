@@ -273,7 +273,7 @@ public class TradeOutpost extends Structure {
 				return;
 			}
 
-			TownHall townhall = this.goodie.getFrame().getTown().getTownHall();
+			Townhall townhall = this.goodie.getFrame().getTown().getTownHall();
 			if (townhall != null) {
 				for (ItemFrameStorage ifs : townhall.getGoodieFrames()) {
 					if (ifs.getFrameID() == this.goodie.getFrame().getFrameID()) {

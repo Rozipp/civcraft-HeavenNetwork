@@ -71,7 +71,7 @@ import com.avrgaming.civcraft.structure.Market;
 import com.avrgaming.civcraft.structure.Road;
 import com.avrgaming.civcraft.structure.RoadBlock;
 import com.avrgaming.civcraft.structure.Structure;
-import com.avrgaming.civcraft.structure.TownHall;
+import com.avrgaming.civcraft.structure.Townhall;
 import com.avrgaming.civcraft.structure.Wall;
 import com.avrgaming.civcraft.structure.farm.FarmChunk;
 import com.avrgaming.civcraft.structure.wonders.Wonder;
@@ -997,7 +997,7 @@ public class CivGlobal {
 	 * provided town. Ignores the civilization the town belongs to.
 	 */
 	public static TreeMap<Double, Civilization> findNearestCivilizations(Town town) {
-		TownHall townhall = town.getTownHall();
+		Townhall townhall = town.getTownHall();
 		TreeMap<Double, Civilization> returnMap = new TreeMap<Double, Civilization>();
 		if (townhall == null)
 			return returnMap;
@@ -1007,7 +1007,7 @@ public class CivGlobal {
 			// Get shortest distance of any of this civ's towns.
 			double shortestDistance = Double.MAX_VALUE;
 			for (Town t : civ.getTowns()) {
-				TownHall tempTownHall = t.getTownHall();
+				Townhall tempTownHall = t.getTownHall();
 				if (tempTownHall == null)
 					continue;
 				double tmpDistance = tempTownHall.getCorner().distanceSquared(townhall.getCorner());
@@ -1624,7 +1624,7 @@ public class CivGlobal {
 	public static int getTownHalls() {
 		int total = 0;
 		for (final Structure strucutre : getStructures()) {
-			if (strucutre instanceof TownHall)
+			if (strucutre instanceof Townhall)
 				++total;
 		}
 		return total;

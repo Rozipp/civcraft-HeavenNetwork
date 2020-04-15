@@ -27,7 +27,7 @@ import com.avrgaming.civcraft.main.CivGlobal;
 import com.avrgaming.civcraft.main.CivMessage;
 import com.avrgaming.civcraft.object.Resident;
 import com.avrgaming.civcraft.structure.Capitol;
-import com.avrgaming.civcraft.structure.TownHall;
+import com.avrgaming.civcraft.structure.Townhall;
 import com.avrgaming.civcraft.util.BlockCoord;
 import com.avrgaming.civcraft.util.CivColor;
 
@@ -78,12 +78,12 @@ public class StructureBlockHitEvent implements Runnable {
 			if (resident.getCiv() != null && resident.getCiv().getCapitol() != null) {
 				if (resident.getCiv().getCapitol().getBuffManager().hasBuff("level6_extraCPdmgTown")
 						&& (CivGlobal.getNearestBuildable(player.getLocation()) instanceof Capitol
-								|| CivGlobal.getNearestBuildable(player.getLocation()) instanceof TownHall)) {
+								|| CivGlobal.getNearestBuildable(player.getLocation()) instanceof Townhall)) {
 					addinationalDamage += this.getAddinationalBreak();
 				}
 				if (resident.getCiv().getCapitol().getBuffManager().hasBuff("level6_extraStrucutreDmgTown")
 						&& !(CivGlobal.getNearestBuildable(player.getLocation()) instanceof Capitol)
-						&& !(CivGlobal.getNearestBuildable(player.getLocation()) instanceof TownHall)) {
+						&& !(CivGlobal.getNearestBuildable(player.getLocation()) instanceof Townhall)) {
 					addinationalDamage += this.getAddinationalBreak();
 				}
 			}

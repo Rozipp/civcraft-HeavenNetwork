@@ -66,7 +66,7 @@ import com.avrgaming.civcraft.siege.Cannon;
 import com.avrgaming.civcraft.structure.ArrowTower;
 import com.avrgaming.civcraft.structure.Road;
 import com.avrgaming.civcraft.structure.Structure;
-import com.avrgaming.civcraft.structure.TownHall;
+import com.avrgaming.civcraft.structure.Townhall;
 import com.avrgaming.civcraft.structure.Wall;
 import com.avrgaming.civcraft.structure.wonders.GrandShipIngermanland;
 import com.avrgaming.civcraft.structure.wonders.Wonder;
@@ -1068,7 +1068,7 @@ public class DebugCommand extends CommandBase {
 	public void frame_cmd() throws CivException {
 		Town town = getSelectedTown();
 
-		TownHall townhall = town.getTownHall();
+		Townhall townhall = town.getTownHall();
 		if (townhall == null) {
 			throw new CivException("No town hall?");
 		}

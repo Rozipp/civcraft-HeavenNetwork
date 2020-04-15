@@ -67,7 +67,7 @@ import com.avrgaming.civcraft.structure.Quarry;
 import com.avrgaming.civcraft.structure.Road;
 import com.avrgaming.civcraft.structure.Structure;
 import com.avrgaming.civcraft.structure.Temple;
-import com.avrgaming.civcraft.structure.TownHall;
+import com.avrgaming.civcraft.structure.Townhall;
 import com.avrgaming.civcraft.structure.TradeOutpost;
 import com.avrgaming.civcraft.structure.TradeShip;
 import com.avrgaming.civcraft.structure.Wall;
@@ -1447,10 +1447,10 @@ public class Town extends SQLObject {
 		return false;
 	}
 
-	public TownHall getTownHall() {
+	public Townhall getTownHall() {
 		for (Structure struct : this.structures.values()) {
 			if (struct.getConfigId().equals("s_capitol") || struct.getConfigId().equals("s_townhall")) {
-				return (TownHall) struct;
+				return (Townhall) struct;
 			}
 		}
 		return null;
@@ -2345,7 +2345,7 @@ public class Town extends SQLObject {
 	}
 
 	public void onGoodiePlaceIntoFrame(ItemFrameStorage framestore, BonusGoodie goodie) {
-		TownHall townhall = this.getTownHall();
+		Townhall townhall = this.getTownHall();
 		if (townhall == null)
 			return;
 		for (ItemFrameStorage fs : townhall.getGoodieFrames()) {
@@ -2373,7 +2373,7 @@ public class Town extends SQLObject {
 		}
 	}
 
-	public void loadGoodiePlaceIntoFrame(TownHall townhall, BonusGoodie goodie) {
+	public void loadGoodiePlaceIntoFrame(Townhall townhall, BonusGoodie goodie) {
 		this.bonusGoodies.put(goodie.getOutpost().getCorner().toString(), goodie);
 		for (ConfigBuff cBuff : goodie.getConfigTradeGood().buffs.values()) {
 			String key = "tradegood:" + goodie.getOutpost().getCorner() + ":" + cBuff.id;
@@ -2402,7 +2402,7 @@ public class Town extends SQLObject {
 	}
 
 	public void onGoodieRemoveFromFrame(ItemFrameStorage framestore, BonusGoodie goodie) {
-		TownHall townhall = this.getTownHall();
+		Townhall townhall = this.getTownHall();
 		if (townhall == null)
 			return;
 		for (ItemFrameStorage fs : townhall.getGoodieFrames()) {
@@ -3374,7 +3374,7 @@ public class Town extends SQLObject {
 
 	public ChunkCoord getTownCultureOrigin() {
 		/* Culture now only eminates from the town hall. */
-		TownHall townhall = this.getTownHall();
+		Townhall townhall = this.getTownHall();
 		ChunkCoord coord;
 		if (townhall == null) {
 			/* if no town hall, pick a 'random' town chunk' */

@@ -65,7 +65,7 @@ import com.avrgaming.civcraft.object.CultureChunk;
 import com.avrgaming.civcraft.object.Relation;
 import com.avrgaming.civcraft.object.Resident;
 import com.avrgaming.civcraft.structure.Capitol;
-import com.avrgaming.civcraft.structure.TownHall;
+import com.avrgaming.civcraft.structure.Townhall;
 import com.avrgaming.civcraft.threading.TaskMaster;
 import com.avrgaming.civcraft.threading.tasks.PlayerChunkNotifyAsyncTask;
 import com.avrgaming.civcraft.threading.tasks.PlayerLoginAsyncTask;
@@ -271,7 +271,7 @@ public class PlayerListener implements Listener {
 
 			}
 			if (resident.hasTown()) {
-				TownHall townhall = resident.getTown().getTownHall();
+				Townhall townhall = resident.getTown().getTownHall();
 				if (townhall != null) {
 					BlockCoord respawn = townhall.getRandomRevivePoint();
 					if (respawn != null) {

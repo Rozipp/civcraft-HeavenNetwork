@@ -53,7 +53,7 @@ import com.avrgaming.civcraft.permission.PermissionGroup;
 import com.avrgaming.civcraft.structure.Capitol;
 import com.avrgaming.civcraft.structure.RespawnLocationHolder;
 import com.avrgaming.civcraft.structure.Structure;
-import com.avrgaming.civcraft.structure.TownHall;
+import com.avrgaming.civcraft.structure.Townhall;
 import com.avrgaming.civcraft.structure.wonders.Neuschwanstein;
 import com.avrgaming.civcraft.structure.wonders.StockExchange;
 import com.avrgaming.civcraft.structure.wonders.TheColossus;
@@ -700,7 +700,7 @@ public class Civilization extends SQLObject {
 		}
 
 		for (Town town : CivGlobal.getTowns()) {
-			TownHall townhall = town.getTownHall();
+			Townhall townhall = town.getTownHall();
 			if (townhall == null) continue;
 
 			double distSqr = townhall.getCenterLocation().distanceSquared(player.getLocation());
@@ -1481,7 +1481,7 @@ public class Civilization extends SQLObject {
 		}
 
 		for (Town t : this.getTowns()) {
-			TownHall townhall = t.getTownHall();
+			Townhall townhall = t.getTownHall();
 			if (townhall == null) {
 				CivLog.error("Town hall was null for " + t.getName() + " when trying to reposition players.");
 				continue;
@@ -1927,7 +1927,7 @@ public class Civilization extends SQLObject {
 		ArrayList<RespawnLocationHolder> respawns = new ArrayList<RespawnLocationHolder>();
 
 		for (Town town : this.getTowns()) {
-			TownHall townhall = town.getTownHall();
+			Townhall townhall = town.getTownHall();
 			if (townhall != null && townhall.isActive()) {
 				if (!townhall.getTown().isCapitol() && town.defeated) {
 					/* Do not respawn at defeated towns. */
@@ -1961,7 +1961,7 @@ public class Civilization extends SQLObject {
 		}
 
 		for (Town town : towns.values()) {
-			TownHall th = town.getTownHall();
+			Townhall th = town.getTownHall();
 			if (th != null) {
 				th.setHitpoints(th.getMaxHitPoints());
 				th.save();

@@ -25,7 +25,7 @@ import com.avrgaming.civcraft.exception.InvalidConfiguration;
 import com.avrgaming.civcraft.main.CivGlobal;
 import com.avrgaming.civcraft.main.CivMessage;
 import com.avrgaming.civcraft.object.CultureChunk;
-import com.avrgaming.civcraft.structure.TownHall;
+import com.avrgaming.civcraft.structure.Townhall;
 import com.avrgaming.civcraft.threading.TaskMaster;
 import com.avrgaming.civcraft.threading.tasks.FireWorkTask;
 import com.avrgaming.civcraft.util.BlockCoord;
@@ -222,8 +222,8 @@ public class WarListener implements Listener {
 							}
 
 							if (!sb.isDamageable()) continue;
-							if (sb.getOwner() instanceof TownHall) {
-								TownHall th = (TownHall) sb.getOwner();
+							if (sb.getOwner() instanceof Townhall) {
+								Townhall th = (Townhall) sb.getOwner();
 								if (th.getControlPoints().containsKey(bcoord)) continue;
 							}
 
@@ -232,8 +232,8 @@ public class WarListener implements Listener {
 
 									structuresHit.add(sb.getOwner());
 
-									if (sb.getOwner() instanceof TownHall) {
-										TownHall th = (TownHall) sb.getOwner();
+									if (sb.getOwner() instanceof Townhall) {
+										Townhall th = (Townhall) sb.getOwner();
 
 										if (th.getHitpoints() == 0) {
 											explodeBlock(b);

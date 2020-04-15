@@ -279,7 +279,7 @@ public class Structure extends Buildable {
 		save();
 	}
 	public void repairStructure() throws CivException {
-		if (this instanceof TownHall) throw new CivException(CivSettings.localize.localizedString("structure_repair_notCaporHall"));
+		if (this instanceof Townhall) throw new CivException(CivSettings.localize.localizedString("structure_repair_notCaporHall"));
 		double cost = getRepairCost();
 		if (!getTown().getTreasury().hasEnough(cost))
 			throw new CivException(CivSettings.localize.localizedString("var_structure_repair_tooPoor", getTown().getName(), cost, CivSettings.CURRENCY_NAME,

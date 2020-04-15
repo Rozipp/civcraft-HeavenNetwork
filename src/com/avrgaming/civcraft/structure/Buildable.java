@@ -299,7 +299,7 @@ public abstract class Buildable extends Construct {
 			}
 
 			for (Town town : CivGlobal.getTowns()) {
-				TownHall townhall = town.getTownHall();
+				Townhall townhall = town.getTownHall();
 				if (townhall == null)
 					continue;
 
@@ -608,7 +608,7 @@ public abstract class Buildable extends Construct {
 					return;
 				}
 			} else {
-				final TownHall townHall = (TownHall) this.getTown().getStructureByType("s_townhall");
+				final Townhall townHall = (Townhall) this.getTown().getStructureByType("s_townhall");
 				boolean allDestroyed = true;
 				for (final ControlPoint c : townHall.controlPoints.values()) {
 					if (c.getInfo().equalsIgnoreCase("Neuschwanstein") && !c.isDestroyed()) {
@@ -684,7 +684,7 @@ public abstract class Buildable extends Construct {
 	}
 
 	public boolean isTownHall() {
-		return (this instanceof TownHall);
+		return (this instanceof Townhall);
 	}
 
 	public void markInvalid() {

@@ -61,7 +61,7 @@ import com.avrgaming.civcraft.util.SimpleBlock;
 import com.avrgaming.civcraft.war.War;
 import com.avrgaming.civcraft.war.WarStats;
 
-public class TownHall extends Structure implements RespawnLocationHolder {
+public class Townhall extends Structure implements RespawnLocationHolder {
 
 	//TODO make this configurable.
 	public static int MAX_GOODIE_FRAMES = 8;
@@ -82,11 +82,11 @@ public class TownHall extends Structure implements RespawnLocationHolder {
 	public ArrayList<BlockCoord> nextGoodieFramePoint = new ArrayList<BlockCoord>();
 	public ArrayList<Integer> nextGoodieFrameDirection = new ArrayList<Integer>();
 
-	public TownHall(Location center, String id, Town town) throws CivException {
+	public Townhall(Location center, String id, Town town) throws CivException {
 		super(center, id, town);
 	}
 
-	public TownHall(ResultSet rs) throws SQLException, CivException {
+	public Townhall(ResultSet rs) throws SQLException, CivException {
 		super(rs);
 	}
 
@@ -634,7 +634,7 @@ public class TownHall extends Structure implements RespawnLocationHolder {
 
 	@Override
 	public void runOnBuild(ChunkCoord cCoord) throws CivException {
-		TownHall oldTownHall = this.getTown().getTownHall();
+		Townhall oldTownHall = this.getTown().getTownHall();
 		if (oldTownHall != null) {
 			TownChunk tc = CivGlobal.getTownChunk(cCoord);
 			if (tc == null || tc.getTown() != this.getTown()) throw new CivException(CivSettings.localize.localizedString("townHall_preBuild_outsideBorder"));

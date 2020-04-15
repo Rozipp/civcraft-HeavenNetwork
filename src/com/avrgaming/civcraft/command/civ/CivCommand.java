@@ -43,7 +43,7 @@ import com.avrgaming.civcraft.object.Relation.Status;
 import com.avrgaming.civcraft.object.Resident;
 import com.avrgaming.civcraft.object.Town;
 import com.avrgaming.civcraft.sessiondb.SessionEntry;
-import com.avrgaming.civcraft.structure.TownHall;
+import com.avrgaming.civcraft.structure.Townhall;
 import com.avrgaming.civcraft.util.CivColor;
 import com.avrgaming.civcraft.war.War;
 
@@ -156,7 +156,7 @@ public class CivCommand extends CommandBase {
 		if (resident.getCiv() == civ) {
 			for (Town town : civ.getTowns()) {
 				String name = town.getName();
-				TownHall townhall = town.getTownHall();
+				Townhall townhall = town.getTownHall();
 				if (townhall == null) {
 					CivMessage.send(sender, CivColor.Rose + CivColor.BOLD + name + CivColor.RESET + CivColor.Gray
 							+ CivSettings.localize.localizedString("cmd_civ_locationMissingTownHall"));

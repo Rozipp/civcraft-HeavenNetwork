@@ -42,7 +42,7 @@ import com.avrgaming.civcraft.structure.Cottage;
 import com.avrgaming.civcraft.structure.FishingBoat;
 import com.avrgaming.civcraft.structure.Granary;
 import com.avrgaming.civcraft.structure.Structure;
-import com.avrgaming.civcraft.structure.TownHall;
+import com.avrgaming.civcraft.structure.Townhall;
 import com.avrgaming.civcraft.structure.TradeOutpost;
 import com.avrgaming.civcraft.structure.wonders.Wonder;
 import com.avrgaming.civcraft.units.EquipmentElement.Equipments;
@@ -305,7 +305,7 @@ public class Spy extends UnitMaterial {
 		
 		// Check that the player is within range of the town hall.
 		Buildable buildable = cc.getTown().getNearestBuildable(player.getLocation());
-		if (buildable instanceof TownHall) {
+		if (buildable instanceof Townhall) {
 			throw new CivException(CivSettings.localize.localizedString("missionBook_sabatoge_errorTownHall"));
 		}
 		if (buildable instanceof Wonder) {
@@ -499,7 +499,7 @@ public class Spy extends UnitMaterial {
 		}
 		
 		// Check that the player is within range of the town hall.
-		TownHall townhall = tc.getTown().getTownHall();
+		Townhall townhall = tc.getTown().getTownHall();
 		if (townhall == null) {
 			throw new CivException(CivSettings.localize.localizedString("missionBook_steal_errorNoTownHall"));
 		}

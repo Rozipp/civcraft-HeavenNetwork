@@ -72,7 +72,7 @@ import com.avrgaming.civcraft.structure.RoadBlock;
 import com.avrgaming.civcraft.structure.Structure;
 // import com.avrgaming.civcraft.structure.TeslaShip;
 import com.avrgaming.civcraft.structure.TeslaTower;
-import com.avrgaming.civcraft.structure.TownHall;
+import com.avrgaming.civcraft.structure.Townhall;
 import com.avrgaming.civcraft.template.Template;
 import com.avrgaming.civcraft.threading.TaskMaster;
 import com.avrgaming.civcraft.threading.tasks.BuildPreviewAsyncTask;
@@ -1324,7 +1324,7 @@ public class Resident extends SQLObject {
 		try {
 			Player player = CivGlobal.getPlayer(this);
 			if (this.hasTown()) {
-				TownHall townhall = this.getTown().getTownHall();
+				Townhall townhall = this.getTown().getTownHall();
 				if (townhall != null) {
 					BlockCoord coord = townhall.getRandomRevivePoint();
 					player.teleport(coord.getLocation());
