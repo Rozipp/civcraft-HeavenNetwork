@@ -36,11 +36,11 @@ cave_entranse:
       name: 'Шахта с лавой'
       template: 'cave1'
       template_entrance: 'entrance1'
+      require_techs: 'tech_hunting'
       type: 1
       mobs: 'leeser_yobo'
-      require_tech: 'tech_hunting'
       rarity: 1
-      transmuter_recipe:
+      treasure:
           - material: 'mat_crafted_leather'
             count: 2
             rate: 10

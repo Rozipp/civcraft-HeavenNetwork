@@ -712,7 +712,7 @@ public abstract class Construct extends SQLObject {
 		}
 	}
 
-	public void removeBuildableBlock(BlockCoord coord) {
+	public void removeContructBlock(BlockCoord coord) {
 		CivGlobal.removeConstructBlock(coord);
 		// all we really need is it's key, we'll put in true to make sure this
 		// structureBlocks collection is not abused.

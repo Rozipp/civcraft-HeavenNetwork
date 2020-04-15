@@ -27,6 +27,7 @@ public class MobStatic {
 
 	public static HashMap<String, LinkedList<ConfigMobs>> biomes = new HashMap<>();
 	public static HashSet<EntityType> disableMobs = new HashSet<>();
+	public static HashSet<String> disableCustomMobs = new HashSet<>();
 
 	static class MobDrop {
 		String uid;
@@ -77,6 +78,8 @@ public class MobStatic {
 			mmid = validMobs.get(civRandom.nextInt(validMobs.size())).uid;
 		} else
 			mmid = mobId;
+		if (disableCustomMobs.contains(mmid))
+			return null;
 		try {
 			return API().spawnMythicMob(mmid, location);
 		} catch (InvalidMobTypeException e) {
