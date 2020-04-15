@@ -58,6 +58,7 @@ import com.avrgaming.civcraft.util.ChunkCoord;
 import com.avrgaming.civcraft.util.CivColor;
 import com.avrgaming.civcraft.util.ItemManager;
 import com.avrgaming.civcraft.util.SimpleBlock;
+import com.avrgaming.civcraft.util.TimeTools;
 import com.avrgaming.global.perks.Perk;
 import com.wimbli.WorldBorder.BorderData;
 import com.wimbli.WorldBorder.Config;
@@ -254,7 +255,7 @@ public abstract class Buildable extends Construct {
 			this.getTown().setCurrentWonderInProgress(this);
 		BuildAsyncTask task = new BuildAsyncTask(this);
 		this.getTown().build_tasks.add(task);
-		TaskMaster.asyncTask(task, 1000);
+		TaskMaster.asyncTask(task, TimeTools.toTicks(5));
 	}
 
 	@Override
@@ -511,7 +512,7 @@ public abstract class Buildable extends Construct {
 		return getHammerCost() * getBlocksCompleted() / getTotalBlock();
 	}
 
-	/** Количество блоков которое нужно установить за тик. Тик = 500 мс */
+	/** Количество блоков которое нужно установить за такт. Такт = 500 мс */
 	public int getBlocksPerTick() {
 		double blocks = getBlocksPerHour() / 7200;
 		if (blocks < 1)

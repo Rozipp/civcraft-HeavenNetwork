@@ -7,16 +7,11 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import com.avrgaming.civcraft.config.CivSettings;
 import com.avrgaming.civcraft.exception.CivException;
 import com.avrgaming.civcraft.main.CivGlobal;
-import com.avrgaming.civcraft.main.CivMessage;
-import com.avrgaming.civcraft.object.Resident;
 import com.avrgaming.civcraft.util.BlockCoord;
-import com.avrgaming.civcraft.util.CivColor;
 import com.avrgaming.civcraft.util.ItemManager;
 import com.avrgaming.civcraft.util.SimpleBlock;
-import com.avrgaming.civcraft.war.War;
 
 public class CaveEntrance extends Construct {
 
@@ -50,44 +45,9 @@ public class CaveEntrance extends Construct {
 
 	@Override
 	public void processSignAction(Player player, ConstructSign sign, PlayerInteractEvent event) {
-		// int special_id = Integer.valueOf(sign.getAction());
-		Resident resident = CivGlobal.getResident(player);
-		if (resident == null)
-			return;
-		if (War.isWarTime())
-			return;
-
-//		Boolean hasPermission = false;
-//		if ((resident.getTown().isMayor(resident)) || (resident.getTown().getAssistantGroup().hasMember(resident))
-//				|| (resident.getCiv().getLeaderGroup().hasMember(resident))
-//				|| (resident.getCiv().getAdviserGroup().hasMember(resident))) {
-//			hasPermission = true;
-//		}
-		switch (sign.getAction()) {
-		case "entrance":
-			if (resident.getConstructSignConfirm() != null && resident.getConstructSignConfirm().equals(sign)) {
-			CivMessage.send(player,
-					CivColor.LightGreen + CivSettings.localize.localizedString("capitol_respawningAlert"));
-			player.teleport(cave.getSpawns().get("1").getLocation());
-			this.cave.activateMobSpawners();
-			} else {
-				this.showInfo(player);
-				resident.setConstructSignConfirm(sign);
-			}
-			break;
-		}
+		cave.processSignAction(player, sign, event);
 	}
 	
-	private void showInfo(Player player) {
-		CivMessage.send(player, "Это вход в пещеру под названием " + this.getDisplayName());
-		CivMessage.send(player, "Здесь писать информацию о пещере");
-		CivMessage.send(player, "Здесь писать информацию о пещере");
-		CivMessage.send(player, "Здесь писать информацию о пещере");
-		CivMessage.send(player, "Здесь писать информацию о пещере");
-		CivMessage.send(player, "Здесь писать информацию о пещере");
-		CivMessage.send(player, "Для входа впещеру нажмите на табличку ещё раз");
-	}
-
 	@Override
 	public void load(ResultSet rs) {
 	}
@@ -108,7 +68,6 @@ public class CaveEntrance extends Construct {
 	@Override
 	public void build(Player player) throws Exception {
 		this.getTemplate().buildTemplate(getCorner());
-		this.bindBlocks();
 	}
 
 	@Override

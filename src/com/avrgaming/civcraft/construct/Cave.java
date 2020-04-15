@@ -2,18 +2,18 @@ package com.avrgaming.civcraft.construct;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.avrgaming.civcraft.config.CivSettings;
 import com.avrgaming.civcraft.config.ConfigCave;
+import com.avrgaming.civcraft.construct.CaveStatus.StatusType;
 import com.avrgaming.civcraft.database.SQL;
 import com.avrgaming.civcraft.exception.CivException;
 import com.avrgaming.civcraft.exception.InvalidNameException;
@@ -21,6 +21,7 @@ import com.avrgaming.civcraft.main.CivGlobal;
 import com.avrgaming.civcraft.main.CivLog;
 import com.avrgaming.civcraft.main.CivMessage;
 import com.avrgaming.civcraft.mythicmob.MobSpawner;
+import com.avrgaming.civcraft.object.Civilization;
 import com.avrgaming.civcraft.object.Resident;
 import com.avrgaming.civcraft.template.Template;
 import com.avrgaming.civcraft.util.BlockCoord;
@@ -38,10 +39,11 @@ import lombok.Setter;
 public class Cave extends Construct {
 
 	public static String worldCavesName = "caves";
-	public static Integer multiplerCoord = 32;
+	public static Integer multiplerCoord = 16;
 
 	private CaveEntrance caveEntrance;
 	private ConfigCave caveConfig;
+	private long lastUpdateTime = 0;
 	private HashMap<String, BlockCoord> spawns = new HashMap<String, BlockCoord>();
 	private HashMap<BlockCoord, MobSpawner> mobspawners = new HashMap<BlockCoord, MobSpawner>();
 	private Set<Resident> residents = new HashSet<Resident>();
@@ -61,6 +63,7 @@ public class Cave extends Construct {
 		this.setCornerEntrance(cornerEntrance);
 		this.hitpoints = 0;
 
+		this.lastUpdateTime = (new Date()).getTime();
 //		this.loadSettings();
 	}
 
@@ -162,9 +165,8 @@ public class Cave extends Construct {
 		this.checkBlockPermissionsAndRestrictions(null);
 
 		this.getTemplate().buildTemplate(corner);
-		this.bindBlocks();
-
 		caveEntrance.build(player);
+		this.bindBlocks();
 
 		try {
 			this.saveNow();
@@ -178,11 +180,9 @@ public class Cave extends Construct {
 	public void checkBlockPermissionsAndRestrictions(Player player) throws CivException {
 		for (Cave cave : CivGlobal.getCaves()) {
 			Rectangle2D caveR = new Rectangle2D(cave.getCorner().getX(), cave.getCorner().getZ(),
-					cave.getCorner().getX() + cave.getTemplate().getSize_x(),
-					cave.getCorner().getZ() + cave.getTemplate().getSize_z());
+					cave.getTemplate().getSize_x(), cave.getTemplate().getSize_z());
 			Rectangle2D thisR = new Rectangle2D(this.getCorner().getX(), this.getCorner().getZ(),
-					this.getCorner().getX() + this.getTemplate().getSize_x(),
-					this.getCorner().getZ() + this.getTemplate().getSize_z());
+					this.getTemplate().getSize_x(), this.getTemplate().getSize_z());
 			if (caveR.intersects(thisR))
 				throw new CivException("Есть пересечение с другими пещерами");
 		}
@@ -241,15 +241,25 @@ public class Cave extends Construct {
 				CivMessage.send(player,
 						CivColor.LightGreen + CivSettings.localize.localizedString("capitol_respawningAlert"));
 				CivGlobal.getResident(player).teleportHome();
-				break;
 			} else {
 				this.showInfo(player);
 				resident.setConstructSignConfirm(sign);
 			}
+			break;
+		case "entrance":
+			if (resident.getConstructSignConfirm() != null && resident.getConstructSignConfirm().equals(sign)) {
+				this.enterCave(player);
+			} else {
+				this.showInfo(player);
+				resident.setConstructSignConfirm(sign);
+				if (resident.getCiv().getCaveStatus(this) == null)
+					CaveStatus.newCaveStatus(this, resident);
+			}
+			break;
 		}
 	}
 
-	private void showInfo(Player player) {
+	public void showInfo(Player player) {
 		CivMessage.send(player, "Это вход в пещеру под названием " + this.getDisplayName());
 		CivMessage.send(player, "Здесь писать информацию о пещере");
 		CivMessage.send(player, "Здесь писать информацию о пещере");
@@ -258,7 +268,7 @@ public class Cave extends Construct {
 		CivMessage.send(player, "Здесь писать информацию о пещере");
 		CivMessage.send(player, "Для входа впещеру нажмите на табличку ещё раз");
 	}
-	
+
 	public void activateMobSpawners() {
 		for (MobSpawner ms : mobspawners.values()) {
 			ms.activate();
@@ -266,9 +276,58 @@ public class Cave extends Construct {
 	}
 
 	public void enterCave(Player player) {
-		
+		CivMessage.send(player, CivColor.LightGreen + CivSettings.localize.localizedString("capitol_respawningAlert"));
+		player.teleport(this.getSpawns().get("1").getLocation());
+		this.activateMobSpawners();
 	}
-	
+
+	public void caveFouded(Resident res) {
+		Civilization civ = res.getCiv();
+		if (civ == null)
+			return;
+		CaveStatus.newCaveStatus(this, res);
+		CivMessage.sendCiv(civ, "Игрок " + res.getName() + " нашел новую пещеру " + this.getDisplayName());
+	}
+
+	public void caveCaptured(Resident res) {
+		if (res == null)
+			return;
+		Civilization newCiv = res.getCiv();
+		if (newCiv == null)
+			return;
+		Civilization oldCiv = this.getCiv();
+		if (oldCiv != null && newCiv.equals(oldCiv))
+			return;
+		if (oldCiv != null) {
+			oldCiv.removeCave(this, newCiv);
+			CivMessage.global("Цивилизация " + newCiv.getName() + " захватила пещеру " + this.getDisplayName()
+					+ " у цивилизации " + oldCiv.getName());
+		} else
+			CivMessage.global("Цивилизация " + newCiv.getName() + " заняла свободную пещеру " + this.getDisplayName());
+		newCiv.addCave(this);
+		this.setSQLOwner(newCiv);
+	}
+
+	public void caveUpdated() {
+		Civilization civ = getCiv();
+		if (civ == null)
+			return;
+		civ.getCaveStatus(this).editCaveStatusUpdate();
+		BlockCoord bc = this.getCornerEntrance();
+		CivMessage.sendCiv(civ, "Пещера " + this.getDisplayName() + " (" + bc.getX() + "," + bc.getY() + "," + bc.getZ()
+				+ ") обновилась");
+	}
+
+	public void caveUsed(Resident res) {
+		if (res == null)
+			return;
+		Civilization civ = getCiv();
+		if (civ == null)
+			return;
+		civ.getCaveStatus(this).editCaveStatusUsed(res);
+		CivMessage.sendCiv(civ, "Игрок " + res.getName() + " вошел в пещеру " + this.getDisplayName());
+	}
+
 	@Override
 	public void onSecondUpdate() {
 	}

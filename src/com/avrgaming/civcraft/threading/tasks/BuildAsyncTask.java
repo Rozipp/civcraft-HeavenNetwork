@@ -91,35 +91,27 @@ public class BuildAsyncTask extends CivAsyncTask {
 				break;
 
 			if (buildable instanceof Wonder) {
-				if (buildable.getTown().getMotherCiv() != null) {
-					CivMessage.sendTown(buildable.getTown(), CivSettings.localize.localizedString(
-							"var_buildAsync_wonderHaltedConquered", buildable.getTown().getCiv().getName()));
-					try {
+				try {
+					if (buildable.getTown().getMotherCiv() != null) { // Если нас захватили то ждать 30 минут
+						CivMessage.sendTown(buildable.getTown(), CivSettings.localize.localizedString(
+								"var_buildAsync_wonderHaltedConquered", buildable.getTown().getCiv().getName()));
 						Thread.sleep(1800000); // 30 min notify.
-					} catch (InterruptedException e) {
-						e.printStackTrace();
 					}
-				}
 
-				Buildable inProgress = buildable.getTown().getCurrentStructureInProgress();
-				if (inProgress != null && inProgress != buildable) {
-					CivMessage.sendTown(buildable.getTown(), CivSettings.localize.localizedString(
-							"var_buildAsync_wonderHaltedOtherConstruction", inProgress.getDisplayName()));
-					try {
+					Buildable inProgress = buildable.getTown().getCurrentStructureInProgress();
+					if (inProgress != null && inProgress != buildable) { // если строим другое здание, то ждем 1 минуту
+						CivMessage.sendTown(buildable.getTown(), CivSettings.localize.localizedString(
+								"var_buildAsync_wonderHaltedOtherConstruction", inProgress.getDisplayName()));
 						Thread.sleep(60000); // 1 min notify.
-					} catch (InterruptedException e) {
-						e.printStackTrace();
 					}
-				}
 
-				if (buildable.getTown().getTownHall() == null) {
-					CivMessage.sendTown(buildable.getTown(),
-							CivSettings.localize.localizedString("buildAsync_wonderHaltedNoTownHall"));
-					try {
+					if (buildable.getTown().getTownHall() == null) {
+						CivMessage.sendTown(buildable.getTown(),
+								CivSettings.localize.localizedString("buildAsync_wonderHaltedNoTownHall"));
 						Thread.sleep(600000); // 10 min notify.
-					} catch (InterruptedException e) {
-						e.printStackTrace();
 					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
 			}
 
@@ -235,7 +227,7 @@ public class BuildAsyncTask extends CivAsyncTask {
 		return false;
 	}
 
-	//-------------- getSimpleBlock__()------------
+	// -------------- getSimpleBlock__()------------
 	private SimpleBlock getSBlockSpiral(int blockCount) {
 		// посрока по спирали. на неквадратные постройки не работает
 		int n = buildable.blocksCompleted % (tpl.size_x * tpl.size_z);
@@ -257,6 +249,10 @@ public class BuildAsyncTask extends CivAsyncTask {
 		sb.buildable = buildable;
 		return sb;
 	}
+
+	/**
+	 * Возвращает ii-тое псевдо случайное число при максимальном max
+	 */
 	private static int getR(int ii, int max) {
 		int i = (ii < max) ? ii : (ii % max);
 		List<Integer> rm = Arrays.asList(85, 79, 44, 2, 342, 373, 496, 48, 321, 340, 330, 57, 213, 311, 201, 114, 403,
@@ -290,8 +286,9 @@ public class BuildAsyncTask extends CivAsyncTask {
 		}
 		return ret;
 	}
+
 	private SimpleBlock getSBlockRandom(int blockCount) {
-		// посрока по спирали. на неквадратные постройки не работает
+		// постройка по случайным блокам
 		int n = buildable.blocksCompleted % (tpl.size_x * tpl.size_z);
 
 		int i = n / tpl.size_z;
@@ -306,6 +303,7 @@ public class BuildAsyncTask extends CivAsyncTask {
 		sb.buildable = buildable;
 		return sb;
 	}
+
 	private SimpleBlock getSBlockOrig(int blockCount) {
 		// 3D mailman algorithm...
 		int y = (blockCount / (tpl.size_x * tpl.size_z)); // bottom to top.

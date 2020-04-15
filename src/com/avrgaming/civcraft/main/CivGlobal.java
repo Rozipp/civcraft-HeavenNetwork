@@ -393,6 +393,7 @@ public class CivGlobal {
 			SQL.close(rs, ps, context);
 		}
 	}
+
 	private static void loadCaves() throws SQLException {
 		Connection context = null;
 		ResultSet rs = null;
@@ -418,7 +419,7 @@ public class CivGlobal {
 			SQL.close(rs, ps, context);
 		}
 	}
-	
+
 	private static void loadTradeGoodies() throws SQLException {
 		Connection context = null;
 		ResultSet rs = null;
@@ -1512,6 +1513,14 @@ public class CivGlobal {
 
 	public static Cave getCave(ChunkCoord ccoord) {
 		return caves.get(ccoord);
+	}
+
+	public static Cave getCaveFromId(int id) {
+		for (Cave cave : caves.values()) {
+			if (cave.getId() == id)
+				return cave;
+		}
+		return null;
 	}
 
 	public static Collection<Cave> getCaves() {

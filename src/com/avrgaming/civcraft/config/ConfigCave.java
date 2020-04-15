@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import com.avrgaming.civcraft.main.CivLog;
 import com.avrgaming.civcraft.mythicmob.ConfigMobs;
+import com.avrgaming.civcraft.object.Civilization;
 
 public class ConfigCave implements Comparable<ConfigCave> {
 
@@ -25,6 +26,8 @@ public class ConfigCave implements Comparable<ConfigCave> {
 	public String name;
 	public String template_name;
 	public String template_entrance;
+	public String require_techs;
+	public int updateTime = 360000;
 	public TypeCave type;
 	public String mobId;
 	public HashMap<String, Treasure> treasures;
@@ -43,6 +46,7 @@ public class ConfigCave implements Comparable<ConfigCave> {
 			cave.template_name = (String) g.get("template");
 			cave.template_entrance = (String) g.get("template_entrance");
 
+			cave.require_techs = (String) g.get("require_techs");
 			cave.mobId = loadMobs((String) g.get("mobs"));
 
 			cave.treasures = loadTreasures(cfg.getMapList("treasure"));
@@ -90,7 +94,6 @@ public class ConfigCave implements Comparable<ConfigCave> {
 
 	@Override
 	public int compareTo(ConfigCave otherGood) {
-
 		if (this.rarity < otherGood.rarity) {
 			// A lower rarity should go first.
 			return 1;
@@ -98,6 +101,19 @@ public class ConfigCave implements Comparable<ConfigCave> {
 			return 0;
 		}
 		return -1;
+	}
+
+	public boolean isAvailable(Civilization civ) {
+		if (require_techs == null || require_techs.equals(""))
+			return true;
+
+		String[] requireTechs = require_techs.split(":");
+
+		for (String reqTech : requireTechs) {
+			if (!civ.hasTechnology(reqTech))
+				return false;
+		}
+		return true;
 	}
 
 }

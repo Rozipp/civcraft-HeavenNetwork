@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
@@ -421,6 +422,7 @@ public abstract class Construct extends SQLObject {
 		TaskMaster.asyncTask(new Runnable() {
 			@Override
 			public void run() {
+				Queue<SimpleBlock> sbs = new LinkedList<SimpleBlock>();
 				BlockCoord corner = construct.getCorner();
 				for (int y = 0; y < tpl.size_y; y++) {
 					for (int z = 0; z < tpl.size_z; z++) {
@@ -430,6 +432,7 @@ public abstract class Construct extends SQLObject {
 								continue;
 							if (sb.specialType == SimpleBlock.Type.COMMAND)
 								continue;
+							sbs.add(new SimpleBlock(corner, sb));
 
 							BlockCoord bc = new BlockCoord(corner.getWorldname(), corner.getX() + x, corner.getY() + y,
 									corner.getZ() + z);
@@ -689,7 +692,15 @@ public abstract class Construct extends SQLObject {
 					e.printStackTrace();
 					return;
 				}
-				(new BuildTemplateTask(tpl, constr.getCorner())).run();
+				BuildTemplateTask btt = new BuildTemplateTask(tpl, constr.getCorner());
+				TaskMaster.asyncTask(btt, 0);
+				while (!BuildTemplateTask.isFinished(btt)) {
+					try {
+						Thread.sleep(2000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
 				Template.deleteFilePath(templatePath);
 			}
 		}, 0);
