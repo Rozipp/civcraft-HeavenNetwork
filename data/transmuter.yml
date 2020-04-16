@@ -54,7 +54,7 @@ transmuter:
          - item: '3:0'
            rate: 7000
 
-#----------- Village
+#----------- Camp
            
     - id: 'trommel1'
       source_item:

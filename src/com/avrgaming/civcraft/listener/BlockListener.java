@@ -16,7 +16,7 @@ import com.avrgaming.civcraft.construct.Construct;
 import com.avrgaming.civcraft.construct.ConstructBlock;
 import com.avrgaming.civcraft.construct.ConstructChest;
 import com.avrgaming.civcraft.construct.ConstructSign;
-import com.avrgaming.civcraft.construct.Village;
+import com.avrgaming.civcraft.construct.Camp;
 import com.avrgaming.civcraft.exception.CivException;
 import com.avrgaming.civcraft.exception.InvalidConfiguration;
 import com.avrgaming.civcraft.main.CivData;
@@ -652,8 +652,8 @@ public class BlockListener implements Listener {
 		ConstructBlock bb = CivGlobal.getConstructBlock(bcoord);
 		if (bb != null) {
 			event.setCancelled(true);
-			if (bb.getOwner() instanceof Village)
-				CivMessage.sendError(event.getPlayer(), CivSettings.localize.localizedString("blockBreak_errorVillage1") + " " + bb.getOwner().getDisplayName() + " "
+			if (bb.getOwner() instanceof Camp)
+				CivMessage.sendError(event.getPlayer(), CivSettings.localize.localizedString("blockBreak_errorcamp1") + " " + bb.getOwner().getDisplayName() + " "
 						+ CivSettings.localize.localizedString("blockBreak_errorOwnedBy"));
 			else
 				CivMessage.sendError(event.getPlayer(), CivSettings.localize.localizedString("blockBreak_errorStructure") + " " + bb.getOwner().getDisplayName()
@@ -780,17 +780,17 @@ public class BlockListener implements Listener {
 		}
 
 		ConstructBlock bb = CivGlobal.getConstructBlock(bcoord);
-		if (bb != null && bb.getOwner() instanceof Village) {
-			Village village = (Village) bb.getOwner();
-			ControlPoint cBlock = village.controlBlocks.get(bcoord);
+		if (bb != null && bb.getOwner() instanceof Camp) {
+			Camp camp = (Camp) bb.getOwner();
+			ControlPoint cBlock = camp.controlBlocks.get(bcoord);
 			if (cBlock != null) {
-				village.onDamage(1, event.getBlock().getWorld(), event.getPlayer(), bcoord, null);
+				camp.onDamage(1, event.getBlock().getWorld(), event.getPlayer(), bcoord, null);
 				event.setCancelled(true);
 				return;
 			} else {
 				event.setCancelled(true);
-				CivMessage.sendError(event.getPlayer(), CivSettings.localize.localizedString("blockBreak_errorvillage1") + " " + village.getName() + " "
-						+ CivSettings.localize.localizedString("blockBreak_errorOwnedBy") + " " + village.getOwnerResident().getName());
+				CivMessage.sendError(event.getPlayer(), CivSettings.localize.localizedString("blockBreak_errorcamp1") + " " + camp.getName() + " "
+						+ CivSettings.localize.localizedString("blockBreak_errorOwnedBy") + " " + camp.getOwnerResident().getName());
 				return;
 			}
 		}
@@ -1085,10 +1085,10 @@ public class BlockListener implements Listener {
 		}
 
 		ChunkCoord coord = new ChunkCoord(event.getPlayer().getLocation());
-		Village village = (Village) CivGlobal.getConstructAt(coord);
-		if (village != null) {
-			if (!village.hasMember(event.getPlayer().getName())) {
-				CivMessage.sendError(event.getPlayer(), CivSettings.localize.localizedString("bedUse_errorNotInvillage"));
+		Camp camp = (Camp) CivGlobal.getConstructAt(coord);
+		if (camp != null) {
+			if (!camp.hasMember(event.getPlayer().getName())) {
+				CivMessage.sendError(event.getPlayer(), CivSettings.localize.localizedString("bedUse_errorNotIncamp"));
 				event.setCancelled(true);
 				return;
 			}
@@ -1110,10 +1110,10 @@ public class BlockListener implements Listener {
 
 		BlockCoord bcoord = new BlockCoord(event.getClickedBlock().getLocation());
 		ConstructBlock bb = CivGlobal.getConstructBlock(bcoord);
-		if (bb != null && !resident.isPermOverride() && bb.getOwner() instanceof Village) {
-			Village village = (Village) bb.getOwner();
-			if (!village.hasMember(resident.getName())) {
-				CivMessage.sendError(event.getPlayer(), CivSettings.localize.localizedString("blockUse_errorNotInvillage"));
+		if (bb != null && !resident.isPermOverride() && bb.getOwner() instanceof Camp) {
+			Camp camp = (Camp) bb.getOwner();
+			if (!camp.hasMember(resident.getName())) {
+				CivMessage.sendError(event.getPlayer(), CivSettings.localize.localizedString("blockUse_errorNotIncamp"));
 				event.setCancelled(true);
 				return;
 			}
@@ -1167,10 +1167,10 @@ public class BlockListener implements Listener {
 		Location loc = (event.getClickedBlock() == null) ? event.getPlayer().getLocation() : event.getClickedBlock().getLocation();
 		ItemStack stack = event.getItem();
 		ChunkCoord coord = new ChunkCoord(event.getPlayer().getLocation());
-		Village village = (Village) CivGlobal.getConstructAt(coord);
-		if (village != null) {
-			if (!village.hasMember(event.getPlayer().getName())) {
-				CivMessage.sendError(event.getPlayer(), CivSettings.localize.localizedString("itemUse_errorvillage") + " " + stack.getType().toString());
+		Camp camp = (Camp) CivGlobal.getConstructAt(coord);
+		if (camp != null) {
+			if (!camp.hasMember(event.getPlayer().getName())) {
+				CivMessage.sendError(event.getPlayer(), CivSettings.localize.localizedString("itemUse_errorcamp") + " " + stack.getType().toString());
 				event.setCancelled(true);
 				return;
 			}
@@ -1735,7 +1735,7 @@ public class BlockListener implements Listener {
 		bcoord.setFromLocation(event.getBlock().getLocation());
 
 		ConstructBlock bb = CivGlobal.getConstructBlock(bcoord);
-		if (bb != null && bb.getOwner() instanceof Village) {
+		if (bb != null && bb.getOwner() instanceof Camp) {
 			if (ItemManager.getTypeId(event.getBlock()) == CivData.WOOD_DOOR || ItemManager.getTypeId(event.getBlock()) == CivData.IRON_DOOR
 					|| ItemManager.getTypeId(event.getBlock()) == CivData.SPRUCE_DOOR || ItemManager.getTypeId(event.getBlock()) == CivData.BIRCH_DOOR
 					|| ItemManager.getTypeId(event.getBlock()) == CivData.JUNGLE_DOOR || ItemManager.getTypeId(event.getBlock()) == CivData.ACACIA_DOOR

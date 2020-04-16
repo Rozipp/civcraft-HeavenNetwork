@@ -50,7 +50,7 @@ import com.avrgaming.civcraft.config.CivSettings;
 import com.avrgaming.civcraft.config.ConfigBuildableInfo;
 import com.avrgaming.civcraft.config.ConfigPerk;
 import com.avrgaming.civcraft.construct.ConstructSign;
-import com.avrgaming.civcraft.construct.Village;
+import com.avrgaming.civcraft.construct.Camp;
 import com.avrgaming.civcraft.database.SQL;
 import com.avrgaming.civcraft.event.EventTimer;
 import com.avrgaming.civcraft.exception.AlreadyRegisteredException;
@@ -95,7 +95,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 public class Resident extends SQLObject {
 
 	private Town town = null;
-	private Village village = null;
+	private Camp camp = null;
 	private boolean townChat = false;
 	private boolean civChat = false;
 	private boolean adminChat = false;
@@ -116,7 +116,7 @@ public class Resident extends SQLObject {
 	private boolean sbperm = false;
 	private boolean controlBlockInstantBreak = false;
 	private int townID = 0;
-	private int villageID = 0;
+	private int campID = 0;
 	private boolean dontSaveTown = false;
 	private String timezone;
 
@@ -200,7 +200,7 @@ public class Resident extends SQLObject {
 	public static int LEVITATE_DURATION = 3;
 
 	private String desiredReportPlayerName;
-	private boolean villageChat;
+	private boolean campChat;
 	public boolean isRefresh;
 
 	public Resident(UUID uid, String name) throws InvalidNameException {
@@ -237,7 +237,7 @@ public class Resident extends SQLObject {
 					"`debt` double DEFAULT 0," + //
 					"`coins` double DEFAULT 0," + //
 					"`daysTilEvict` mediumint DEFAULT NULL," + //
-					"`village_id` int(11)," + //
+					"`camp_id` int(11)," + //
 					"`nextTeleport` BIGINT NOT NULL DEFAULT '0'," + //
 					"`nextRefresh` BIGINT NOT NULL DEFAULT '0'," + //
 					"`timezone` mediumtext," + //
@@ -265,7 +265,7 @@ public class Resident extends SQLObject {
 		this.setId(rs.getInt("id"));
 		this.setName(rs.getString("name"));
 		this.townID = rs.getInt("town_id");
-		this.villageID = rs.getInt("village_id");
+		this.campID = rs.getInt("camp_id");
 		this.lastIP = rs.getString("last_ip");
 		this.debugTown = rs.getString("debug_town");
 
@@ -311,13 +311,13 @@ public class Resident extends SQLObject {
 			}
 		}
 
-		if (this.villageID != 0) {
-			this.setVillage(CivGlobal.getVillageFromId(this.villageID));
-			if (this.village == null) {
-				CivLog.error("COULD NOT FIND VILLAGE(" + this.villageID + ") FOR RESIDENT(" + this.getId() + ") Name:"
+		if (this.campID != 0) {
+			this.setCamp(CivGlobal.getCampFromId(this.campID));
+			if (this.camp == null) {
+				CivLog.error("COULD NOT FIND CAMP(" + this.campID + ") FOR RESIDENT(" + this.getId() + ") Name:"
 						+ this.getName());
 			} else {
-				village.addMember(this);
+				camp.addMember(this);
 			}
 		}
 
@@ -439,10 +439,10 @@ public class Resident extends SQLObject {
 			}
 		}
 
-		if (this.getVillage() != null) {
-			hashmap.put("village_id", this.getVillage().getId());
+		if (this.getCamp() != null) {
+			hashmap.put("camp_id", this.getCamp().getId());
 		} else {
-			hashmap.put("village_id", null);
+			hashmap.put("camp_id", null);
 		}
 
 		hashmap.put("lastOnline", this.getLastOnline());
@@ -861,15 +861,15 @@ public class Resident extends SQLObject {
 		return this.interactiveResponse;
 	}
 
-	public boolean hasVillage() {
-		return (this.village != null);
+	public boolean hasCamp() {
+		return (this.camp != null);
 	}
 
-	public String getVillageString() {
-		if (this.village == null) {
+	public String getCampString() {
+		if (this.camp == null) {
 			return "none";
 		}
-		return this.village.getName();
+		return this.camp.getName();
 	}
 
 	public void showWarnings(Player player) {

@@ -13,16 +13,16 @@ import java.util.concurrent.locks.ReentrantLock;
 import com.avrgaming.civcraft.main.CivGlobal;
 import com.avrgaming.civcraft.threading.CivAsyncTask;
 
-public class VillageHourlyTick extends CivAsyncTask {
+public class CampHourlyTick extends CivAsyncTask {
 
 	@Override
 	public void run() {
-		for (Village village : CivGlobal.getVillages()) {
-			ReentrantLock reentrantLock = village.lockLonghouse;
+		for (Camp camp : CivGlobal.getCamps()) {
+			ReentrantLock reentrantLock = camp.lockLonghouse;
 			if (reentrantLock.tryLock()) {
 				try {
-					village.processFirepoints();
-					village.processLonghouse(this);
+					camp.processFirepoints();
+					camp.processLonghouse(this);
 				} finally {
 					reentrantLock.unlock();
 				}

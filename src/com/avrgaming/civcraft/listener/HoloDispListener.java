@@ -104,7 +104,7 @@ public class HoloDispListener {
 	   }
 
    public static void clearHolos() {
-       CivLog.info(CivGlobal.getTradeGoods().size() + CivGlobal.getTotalVillages() + CivGlobal.getTownHalls() + CivGlobal.getTotalBanks() + " \u0413\u043e\u043b\u043e\u0433\u0440\u0430\u043c\u043c \u0441 CivCraft'\u043e\u043c \u0431\u044b\u043b\u043e \u0443\u0434\u0430\u043b\u0435\u043d\u043e.");
+       CivLog.info(CivGlobal.getTradeGoods().size() + CivGlobal.getTotalCamps() + CivGlobal.getTownHalls() + CivGlobal.getTotalBanks() + " \u0413\u043e\u043b\u043e\u0433\u0440\u0430\u043c\u043c \u0441 CivCraft'\u043e\u043c \u0431\u044b\u043b\u043e \u0443\u0434\u0430\u043b\u0435\u043d\u043e.");
        for (final Hologram hologram : HologramsAPI.getHolograms((Plugin)CivCraft.getPlugin())) {
            hologram.delete();
        }

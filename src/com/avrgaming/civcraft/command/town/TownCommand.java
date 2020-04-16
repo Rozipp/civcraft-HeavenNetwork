@@ -774,7 +774,7 @@ public class TownCommand extends CommandBase {
 					+ CivSettings.localize.localizedString("cmd_civ_dip_declareTooCloseToWar4"));
 		}
 
-		if (newResident.hasVillage()) {
+		if (newResident.hasCamp()) {
 			try {
 				Player resPlayer = CivGlobal.getPlayer(newResident);
 				CivMessage.send(resPlayer,

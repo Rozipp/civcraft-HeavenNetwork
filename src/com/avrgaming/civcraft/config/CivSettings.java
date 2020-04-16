@@ -38,7 +38,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.avrgaming.civcraft.config.ConfigEndCondition;
-import com.avrgaming.civcraft.construct.Village;
+import com.avrgaming.civcraft.construct.Camp;
 import com.avrgaming.civcraft.exception.CivException;
 import com.avrgaming.civcraft.exception.InvalidConfiguration;
 import com.avrgaming.civcraft.items.CraftableCustomMaterial;
@@ -157,9 +157,9 @@ public class CivSettings {
 	public static int thorhammerchance;
 	public static int punchoutchance;
 
-	public static FileConfiguration villageConfig; /* village.yml */
-	public static Map<Integer, ConfigVillageLonghouseLevel> longhouseLevels = new HashMap<Integer, ConfigVillageLonghouseLevel>();
-	public static Map<String, ConfigVillageUpgrade> villageUpgrades = new HashMap<String, ConfigVillageUpgrade>();
+	public static FileConfiguration campConfig; /* camp.yml */
+	public static Map<Integer, ConfigCampLonghouseLevel> longhouseLevels = new HashMap<Integer, ConfigCampLonghouseLevel>();
+	public static Map<String, ConfigCampUpgrade> campUpgrades = new HashMap<String, ConfigCampUpgrade>();
 
 	public static FileConfiguration transmuterConfig; /* transmuter.yml */
 	public static HashMap<String, ConfigTransmuterRecipe> transmuterRecipes = new HashMap<>();
@@ -209,7 +209,7 @@ public class CivSettings {
 	public static final String TPHOSTILE = "civ.tp.hostile";
 	public static final String TPWAR = "civ.tp.war";
 	public static final String TPPEACE = "civ.tp.peace";
-	public static final String TPVILLAGE = "civ.tp.village";
+	public static final String TPCAMP = "civ.tp.camp";
 	public static final String TPALL = "civ.tp.*";
 	public static final int MARKET_COIN_STEP = 5;
 	public static final int MARKET_BUYSELL_COIN_DIFF = 30;
@@ -469,7 +469,7 @@ public class CivSettings {
 		scoreConfig = loadCivConfig("score.yml");
 		perkConfig = loadCivConfig("perks.yml");
 		enchantConfig = loadCivConfig("enchantments.yml");
-		villageConfig = loadCivConfig("village.yml");
+		campConfig = loadCivConfig("camp.yml");
 		transmuterConfig = loadCivConfig("transmuter.yml");
 		marketConfig = loadCivConfig("market.yml");
 		happinessConfig = loadCivConfig("happiness.yml");
@@ -515,8 +515,8 @@ public class CivSettings {
 
 		ConfigPerk.loadConfig(perkConfig, perks);
 		ConfigPerk.loadTemplates(perkConfig, templates);
-		ConfigVillageLonghouseLevel.loadConfig(villageConfig, longhouseLevels);
-		ConfigVillageUpgrade.loadConfig(villageConfig, villageUpgrades);
+		ConfigCampLonghouseLevel.loadConfig(campConfig, longhouseLevels);
+		ConfigCampUpgrade.loadConfig(campConfig, campUpgrades);
 
 		ConfigMarketItem.loadConfig(marketConfig, marketItems);
 		ConfigStableItem.loadConfig(structureConfig, stableItems);
@@ -838,10 +838,10 @@ public class CivSettings {
 		return returnUpgrade;
 	}
 
-	public static ConfigVillageUpgrade getVillageUpgradeByNameRegex(Village village, String name) throws CivException {
-		ConfigVillageUpgrade returnUpgrade = null;
-		for (ConfigVillageUpgrade upgrade : villageUpgrades.values()) {
-			if (!upgrade.isAvailable(village)) {
+	public static ConfigCampUpgrade getCampUpgradeByNameRegex(Camp camp, String name) throws CivException {
+		ConfigCampUpgrade returnUpgrade = null;
+		for (ConfigCampUpgrade upgrade : campUpgrades.values()) {
+			if (!upgrade.isAvailable(camp)) {
 				continue;
 			}
 

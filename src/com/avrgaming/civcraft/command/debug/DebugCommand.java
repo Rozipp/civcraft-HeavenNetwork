@@ -126,7 +126,7 @@ public class DebugCommand extends CommandBase {
 		cs.add("refreshchunk", "refreshes the chunk you're standing in.. for science.");
 		cs.add("touches", "[town] - prints a list of friendly touches for this town's culture.");
 		cs.add("listconquered", "shows a list of conquered civilizations.");
-		cs.add("village", "Debugs villages.");
+		cs.add("camp", "Debugs camps.");
 		cs.add("blockinfo", "[x] [y] [z] shows block info for this block.");
 		cs.add("fakeresidents", "[town] [count] - Adds this many fake residents to a town.");
 		cs.add("clearresidents", "[town] - clears this town of it's random residents.");
@@ -739,8 +739,8 @@ public class DebugCommand extends CommandBase {
 
 	}
 
-	public void village_cmd() {
-		DebugVillageCommand cmd = new DebugVillageCommand();
+	public void camp_cmd() {
+		DebugCampCommand cmd = new DebugCampCommand();
 		cmd.onCommand(sender, null, "farm", this.stripArgs(args, 1));
 	}
 

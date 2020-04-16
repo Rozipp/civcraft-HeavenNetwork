@@ -25,48 +25,48 @@ import java.util.Date;
 
 import com.avrgaming.civcraft.command.CommandBase;
 import com.avrgaming.civcraft.config.CivSettings;
-import com.avrgaming.civcraft.construct.Village;
+import com.avrgaming.civcraft.construct.Camp;
 import com.avrgaming.civcraft.exception.CivException;
 import com.avrgaming.civcraft.main.CivMessage;
 import com.avrgaming.civcraft.object.Resident;
 
-public class AdminVillageCommand extends CommandBase {
+public class AdminCampCommand extends CommandBase {
 
 	@Override
 	public void init() {
-		command = "/ad village";
-		displayName = CivSettings.localize.localizedString("adcmd_village_name");	
+		command = "/ad camp";
+		displayName = CivSettings.localize.localizedString("adcmd_camp_name");	
 		
-		cs.add("destroy", CivSettings.localize.localizedString("adcmd_village_destroyDesc"));
-		cs.add("setraidtime", CivSettings.localize.localizedString("adcmd_village_setRaidTimeDesck"));
-		cs.add("rebuild", CivSettings.localize.localizedString("adcmd_village_rebuildDesc"));
+		cs.add("destroy", CivSettings.localize.localizedString("adcmd_camp_destroyDesc"));
+		cs.add("setraidtime", CivSettings.localize.localizedString("adcmd_camp_setRaidTimeDesck"));
+		cs.add("rebuild", CivSettings.localize.localizedString("adcmd_camp_rebuildDesc"));
 	}
 	
 	public void rebuild_cmd() throws CivException {
-		Village village = this.getNamedVillage(1);
+		Camp camp = this.getNamedCamp(1);
 		
 		try {
-			village.repairFromTemplate();
+			camp.repairFromTemplate();
 		} catch (IOException e) {
 		} catch (CivException e) {
 			e.printStackTrace();
 		}
-		village.processCommandSigns();
+		camp.processCommandSigns();
 		CivMessage.send(sender, CivSettings.localize.localizedString("Repaired"));
 	}
 	
 	public void setraidtime_cmd() throws CivException {
 		Resident resident = getNamedResident(1);
 		
-		if (!resident.hasVillage()) {
-			throw new CivException(CivSettings.localize.localizedString("adcmd_village_setRaidTimeNovillage"));
+		if (!resident.hasCamp()) {
+			throw new CivException(CivSettings.localize.localizedString("adcmd_camp_setRaidTimeNocamp"));
 		}
 		
 		if (args.length < 3) {
-			throw new CivException(CivSettings.localize.localizedString("adcmd_village_setRaidTimeInvlidInput"));
+			throw new CivException(CivSettings.localize.localizedString("adcmd_camp_setRaidTimeInvlidInput"));
 		}
 		
-		Village village = resident.getVillage();
+		Camp camp = resident.getCamp();
 		
 		String dateStr = args[2];
 		SimpleDateFormat parser = new SimpleDateFormat("d:M:y:H:m");
@@ -74,18 +74,18 @@ public class AdminVillageCommand extends CommandBase {
 		Date next;
 		try {
 			next = parser.parse(dateStr);
-			village.setNextRaidDate(next);
-			CivMessage.sendSuccess(sender, CivSettings.localize.localizedString("adcmd_village_setRaidTimeSuccess"));
+			camp.setNextRaidDate(next);
+			CivMessage.sendSuccess(sender, CivSettings.localize.localizedString("adcmd_camp_setRaidTimeSuccess"));
 		} catch (ParseException e) {
-			throw new CivException(CivSettings.localize.localizedString("var_adcmd_village_setRaidTimeFailedFormat",args[2]));
+			throw new CivException(CivSettings.localize.localizedString("var_adcmd_camp_setRaidTimeFailedFormat",args[2]));
 		}
 		
 	}
 	
 	public void destroy_cmd() throws CivException {
-		Village village = getNamedVillage(1);		
-		village.destroy();
-		CivMessage.sendSuccess(sender, CivSettings.localize.localizedString("adcmd_village_destroyedSuccess"));
+		Camp camp = getNamedCamp(1);		
+		camp.destroy();
+		CivMessage.sendSuccess(sender, CivSettings.localize.localizedString("adcmd_camp_destroyedSuccess"));
 	}
 	
 	@Override

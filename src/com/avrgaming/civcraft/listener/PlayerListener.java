@@ -53,7 +53,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import com.avrgaming.civcraft.config.CivSettings;
 import com.avrgaming.civcraft.config.ConfigTechPotion;
-import com.avrgaming.civcraft.construct.Village;
+import com.avrgaming.civcraft.construct.Camp;
 import com.avrgaming.civcraft.items.CustomMaterial;
 import com.avrgaming.civcraft.main.CivCraft;
 import com.avrgaming.civcraft.main.CivData;
@@ -167,15 +167,15 @@ public class PlayerListener implements Listener {
 					}
 				}
 				
-				Village tovillage = (Village) CivGlobal.getConstructAt(new ChunkCoord(event.getTo()));
-				if (tovillage != null && tovillage != resident.getVillage() && !player.hasPermission(CivSettings.TPVILLAGE)) {
+				Camp tocamp = (Camp) CivGlobal.getConstructAt(new ChunkCoord(event.getTo()));
+				if (tocamp != null && tocamp != resident.getCamp() && !player.hasPermission(CivSettings.TPCAMP)) {
 					/* Deny telportation into Civ if not allied. */
 					event.setTo(event.getFrom());
 					if (!event.isCancelled()) {
 						CivLog.debug("Cancelled Event " + event.getEventName() + " with cause: " + event.getCause());
 						event.setCancelled(true);
 						CivMessage.send(resident, CivColor.Red + CivSettings.localize.localizedString("teleportDeniedPrefix") + " " + CivColor.White
-								+ CivSettings.localize.localizedString("var_teleportDeniedCamp", CivColor.Green + tovillage.getName() + CivColor.White));
+								+ CivSettings.localize.localizedString("var_teleportDeniedCamp", CivColor.Green + tocamp.getName() + CivColor.White));
 						return;
 					}
 
@@ -260,12 +260,12 @@ public class PlayerListener implements Listener {
 				}
 			}
 		} else {
-			if (resident.hasVillage()) {
-				Village village = resident.getVillage();
-				BlockCoord respawn = village.getCorner();
+			if (resident.hasCamp()) {
+				Camp camp = resident.getCamp();
+				BlockCoord respawn = camp.getCorner();
 				if (respawn != null) {
 					event.setRespawnLocation(respawn.getCenteredLocation());
-					CivMessage.send(player, CivColor.LightGray + CivSettings.localize.localizedString("playerListen_repawnAtName", village.getName()));
+					CivMessage.send(player, CivColor.LightGray + CivSettings.localize.localizedString("playerListen_repawnAtName", camp.getName()));
 				}
 				return;
 
@@ -663,7 +663,7 @@ public class PlayerListener implements Listener {
 				return;
 			}
 			if (resident.isTeleporting) {
-				CivMessage.sendError(player, CivSettings.localize.localizedString("cmd_village_teleport_teleportingErr"));
+				CivMessage.sendError(player, CivSettings.localize.localizedString("cmd_camp_teleport_teleportingErr"));
 				event.setCancelled(true);
 			}
 		}

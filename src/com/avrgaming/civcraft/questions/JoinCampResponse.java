@@ -21,14 +21,14 @@ package com.avrgaming.civcraft.questions;
 import org.bukkit.entity.Player;
 
 import com.avrgaming.civcraft.config.CivSettings;
-import com.avrgaming.civcraft.construct.Village;
+import com.avrgaming.civcraft.construct.Camp;
 import com.avrgaming.civcraft.main.CivMessage;
 import com.avrgaming.civcraft.object.Resident;
 import com.avrgaming.civcraft.util.CivColor;
 
-public class JoinVillageResponse implements QuestionResponseInterface {
+public class JoinCampResponse implements QuestionResponseInterface {
 
-	public Village village;
+	public Camp camp;
 	public Resident resident;
 	public Player sender;
 	
@@ -37,9 +37,9 @@ public class JoinVillageResponse implements QuestionResponseInterface {
 		if (param.equalsIgnoreCase("accept")) {
 			CivMessage.send(sender, CivColor.LightGray+CivSettings.localize.localizedString("var_joinCamp_accepted",resident.getName()));
 			
-			if (!village.hasMember(resident.getName())) {
-				village.addMember(resident);
-				CivMessage.sendVillage(village, CivSettings.localize.localizedString("var_joinCamp_Alert",resident.getName()));
+			if (!camp.hasMember(resident.getName())) {
+				camp.addMember(resident);
+				CivMessage.sendCamp(camp, CivSettings.localize.localizedString("var_joinCamp_Alert",resident.getName()));
 				resident.save();
 			}
 		} else {

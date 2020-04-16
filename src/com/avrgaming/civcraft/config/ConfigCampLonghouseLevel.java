@@ -27,17 +27,17 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import com.avrgaming.civcraft.main.CivLog;
 
-public class ConfigVillageLonghouseLevel {
+public class ConfigCampLonghouseLevel {
 	public int level;			/* Current level number */
 	public Map<Integer, Integer> consumes; /* A map of block ID's and amounts required for this level to progress */
 	public int count; /* Number of times that consumes must be met to level up */
 	public double coins; /* Coins generated each time for the cottage */
 	
-	public ConfigVillageLonghouseLevel() {
+	public ConfigCampLonghouseLevel() {
 		
 	}
 	
-	public ConfigVillageLonghouseLevel(ConfigVillageLonghouseLevel currentlvl) {
+	public ConfigCampLonghouseLevel(ConfigCampLonghouseLevel currentlvl) {
 		this.level = currentlvl.level;
 		this.count = currentlvl.count;
 		this.coins = currentlvl.coins;
@@ -50,7 +50,7 @@ public class ConfigVillageLonghouseLevel {
 	}
 
 
-	public static void loadConfig(FileConfiguration cfg, Map<Integer, ConfigVillageLonghouseLevel> longhouse_levels) {
+	public static void loadConfig(FileConfiguration cfg, Map<Integer, ConfigCampLonghouseLevel> longhouse_levels) {
 		longhouse_levels.clear();
 		List<Map<?, ?>> list = cfg.getMapList("longhouse_levels");
 		Map<Integer, Integer> consumes_list = null;
@@ -67,7 +67,7 @@ public class ConfigVillageLonghouseLevel {
 			}
 			
 			
-			ConfigVillageLonghouseLevel level = new ConfigVillageLonghouseLevel();
+			ConfigCampLonghouseLevel level = new ConfigCampLonghouseLevel();
 			level.level = (Integer)cl.get("level");
 			level.consumes = consumes_list;
 			level.count = (Integer)cl.get("count");

@@ -26,7 +26,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import com.avrgaming.civcraft.config.CivSettings;
 import com.avrgaming.civcraft.config.ConfigBuildableInfo;
 import com.avrgaming.civcraft.exception.CivException;
-import com.avrgaming.civcraft.interactive.InteractiveVillageName;
+import com.avrgaming.civcraft.interactive.InteractiveCampName;
 import com.avrgaming.civcraft.main.CivGlobal;
 import com.avrgaming.civcraft.main.CivMessage;
 import com.avrgaming.civcraft.object.Resident;
@@ -36,25 +36,25 @@ import com.avrgaming.civcraft.util.CivColor;
 
 import gpl.AttributeUtil;
 
-public class FoundVillage extends ItemComponent implements CallbackInterface {
+public class FoundCamp extends ItemComponent implements CallbackInterface {
 
 	@Override
 	public void onPrepareCreate(AttributeUtil attrUtil) {
-		attrUtil.addLore(ChatColor.RESET+CivColor.Gold+CivSettings.localize.localizedString("buildvillage_lore1"));
+		attrUtil.addLore(ChatColor.RESET+CivColor.Gold+CivSettings.localize.localizedString("buildcamp_lore1"));
 		attrUtil.addLore(ChatColor.RESET+CivColor.Rose+CivSettings.localize.localizedString("itemLore_RightClickToUse"));		
 		attrUtil.addEnhancement("LoreEnhancementSoulBound", null, null);
 		attrUtil.addLore(CivColor.Gold+CivSettings.localize.localizedString("itemLore_Soulbound"));
 	}
 	
-	public void foundVillage(Player player) throws CivException {
+	public void foundCamp(Player player) throws CivException {
 		Resident resident = CivGlobal.getResident(player);
 		
 		if (resident.hasTown()) {
-			throw new CivException(CivSettings.localize.localizedString("buildvillage_hasTown"));
+			throw new CivException(CivSettings.localize.localizedString("buildcamp_hasTown"));
 		}
 		
-		if (resident.hasVillage()) {
-			throw new CivException(CivSettings.localize.localizedString("buildvillage_hasvillage"));
+		if (resident.hasCamp()) {
+			throw new CivException(CivSettings.localize.localizedString("buildcamp_hascamp"));
 		}
 			
 		/*
@@ -62,10 +62,10 @@ public class FoundVillage extends ItemComponent implements CallbackInterface {
 		 */
 		CivMessage.send(player, CivColor.LightGreen+CivColor.BOLD+CivSettings.localize.localizedString("build_checking_position"));
 		ConfigBuildableInfo info = new ConfigBuildableInfo();
-		info.id = "village";
-		info.displayName = "Village";
+		info.id = "camp";
+		info.displayName = "Camp";
 		info.ignore_floating = false;
-		info.template_name = "village";
+		info.template_name = "camp";
 		info.tile_improvement = false;
 		info.templateYShift = -1;
 		
@@ -80,7 +80,7 @@ public class FoundVillage extends ItemComponent implements CallbackInterface {
 		}
 		
 		try {
-			foundVillage(event.getPlayer());
+			foundCamp(event.getPlayer());
 		} catch (CivException e) {
 			CivMessage.sendError(event.getPlayer(), e.getMessage());
 		}
@@ -97,12 +97,12 @@ public class FoundVillage extends ItemComponent implements CallbackInterface {
 		}
 		Resident resident = CivGlobal.getResident(playerName);
 		
-		CivMessage.sendHeading(player, CivSettings.localize.localizedString("buildvillage_Heading"));
-		CivMessage.send(player, CivColor.LightGreen+CivSettings.localize.localizedString("buildvillage_prompt1"));
+		CivMessage.sendHeading(player, CivSettings.localize.localizedString("buildcamp_Heading"));
+		CivMessage.send(player, CivColor.LightGreen+CivSettings.localize.localizedString("buildcamp_prompt1"));
 		CivMessage.send(player, " ");
-		CivMessage.send(player, CivColor.LightGreen+ChatColor.BOLD+CivSettings.localize.localizedString("buildvillage_prompt2"));
+		CivMessage.send(player, CivColor.LightGreen+ChatColor.BOLD+CivSettings.localize.localizedString("buildcamp_prompt2"));
 		CivMessage.send(player, CivColor.LightGray+CivSettings.localize.localizedString("build_cancel_prompt"));
 		
-		resident.setInteractiveMode(new InteractiveVillageName());
+		resident.setInteractiveMode(new InteractiveCampName());
 	}
 }

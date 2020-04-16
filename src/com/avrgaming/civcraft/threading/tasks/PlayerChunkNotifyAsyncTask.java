@@ -17,7 +17,7 @@ import org.bukkit.entity.Player;
 
 import com.avrgaming.civcraft.config.CivSettings;
 import com.avrgaming.civcraft.construct.Construct;
-import com.avrgaming.civcraft.construct.Village;
+import com.avrgaming.civcraft.construct.Camp;
 import com.avrgaming.civcraft.exception.CivException;
 import com.avrgaming.civcraft.main.CivGlobal;
 import com.avrgaming.civcraft.main.CivMessage;
@@ -106,8 +106,8 @@ public class PlayerChunkNotifyAsyncTask implements Runnable {
 		CultureChunk fromCc = CivGlobal.getCultureChunk(from);
 		CultureChunk toCc = CivGlobal.getCultureChunk(to);
 		Construct tConstr;
-		Village tovillage = (tConstr = CivGlobal.getConstructAt(new ChunkCoord(to))) instanceof Village ? (Village) tConstr : null;
-		Village fromvillage = (tConstr = CivGlobal.getConstructAt(new ChunkCoord(from))) instanceof Village ? (Village) tConstr : null;
+		Camp tocamp = (tConstr = CivGlobal.getConstructAt(new ChunkCoord(to))) instanceof Camp ? (Camp) tConstr : null;
+		Camp fromcamp = (tConstr = CivGlobal.getConstructAt(new ChunkCoord(from))) instanceof Camp ? (Camp) tConstr : null;
 
 		Player player;
 		Resident resident;
@@ -123,12 +123,12 @@ public class PlayerChunkNotifyAsyncTask implements Runnable {
 		String title = "";
 		String subTitle = "";
 
-		//We've entered a village.
-		if (tovillage != null && tovillage != fromvillage) {
-			title += CivColor.Gold + CivSettings.localize.localizedString("var_playerChunkNotify_entervillage", tovillage.getName()) + " " + CivColor.Rose
+		//We've entered a camp.
+		if (tocamp != null && tocamp != fromcamp) {
+			title += CivColor.Gold + CivSettings.localize.localizedString("var_playerChunkNotify_entercamp", tocamp.getName()) + " " + CivColor.Rose
 					+ "[PvP]";
 		} else
-			if (tovillage == null && fromvillage != null) {
+			if (tocamp == null && fromcamp != null) {
 				title += getToWildMessage();
 			} else
 				if (fromTc != null && toTc == null) {

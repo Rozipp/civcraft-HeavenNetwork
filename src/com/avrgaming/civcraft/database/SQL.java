@@ -14,7 +14,7 @@ import com.avrgaming.civcraft.config.CivSettings;
 import com.avrgaming.civcraft.config.ConfigMarketItem;
 import com.avrgaming.civcraft.construct.Cave;
 import com.avrgaming.civcraft.construct.ConstructSign;
-import com.avrgaming.civcraft.construct.Village;
+import com.avrgaming.civcraft.construct.Camp;
 import com.avrgaming.civcraft.database.ConnectionPool;
 import com.avrgaming.civcraft.event.EventTimer;
 import com.avrgaming.civcraft.exception.InvalidConfiguration;
@@ -108,7 +108,7 @@ public class SQL {
 		BonusGoodie.init();
 		MissionLogger.init();
 		EventTimer.init();
-		Village.init();
+		Camp.init();
 		ConfigMarketItem.init();
 		RandomEvent.init();
 		ConstructSign.init();

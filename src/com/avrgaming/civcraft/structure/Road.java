@@ -23,7 +23,7 @@ import org.bukkit.util.Vector;
 import com.avrgaming.civcraft.config.CivSettings;
 import com.avrgaming.civcraft.construct.ConstructBlock;
 import com.avrgaming.civcraft.construct.ConstructDamageBlock;
-import com.avrgaming.civcraft.construct.Village;
+import com.avrgaming.civcraft.construct.Camp;
 import com.avrgaming.civcraft.database.SQL;
 import com.avrgaming.civcraft.exception.CivException;
 import com.avrgaming.civcraft.exception.InvalidConfiguration;
@@ -340,8 +340,8 @@ public class Road extends Structure {
 				throw new CivException(CivSettings.localize.localizedString("var_road_validate_protectedBlock", bcoord.toString()));
 			}
 
-			if ((Village) CivGlobal.getConstructAt(coord) != null) {
-				throw new CivException(CivSettings.localize.localizedString("road_validate_village"));
+			if ((Camp) CivGlobal.getConstructAt(coord) != null) {
+				throw new CivException(CivSettings.localize.localizedString("road_validate_camp"));
 			}
 
 			ConstructBlock structBlock = CivGlobal.getConstructBlock(bcoord);

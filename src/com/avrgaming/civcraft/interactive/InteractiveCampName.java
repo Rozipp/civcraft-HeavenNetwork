@@ -9,7 +9,7 @@
 package com.avrgaming.civcraft.interactive;
 
 import com.avrgaming.civcraft.config.CivSettings;
-import com.avrgaming.civcraft.construct.Village;
+import com.avrgaming.civcraft.construct.Camp;
 import com.avrgaming.civcraft.exception.CivException;
 import com.avrgaming.civcraft.main.CivGlobal;
 import com.avrgaming.civcraft.main.CivMessage;
@@ -19,7 +19,7 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class InteractiveVillageName implements InteractiveResponse {
+public class InteractiveCampName implements InteractiveResponse {
 	public void respond(String message, Resident resident) {
 		Player player;
 		try {
@@ -33,12 +33,12 @@ public class InteractiveVillageName implements InteractiveResponse {
 				message = message.replace(" ", "_");
 				message = message.replace("\"", "");
 				message = message.replace("'", "");
-				Village.newVillage(resident, player, message);
+				Camp.newCamp(resident, player, message);
 			} else {
-				CivMessage.send(player, "§c" + ChatColor.BOLD + CivSettings.localize.localizedString("interactive_village_invalid"));
+				CivMessage.send(player, "§c" + ChatColor.BOLD + CivSettings.localize.localizedString("interactive_camp_invalid"));
 			}
 		} else {
-			CivMessage.send(player, CivSettings.localize.localizedString("interactive_village_cancel"));
+			CivMessage.send(player, CivSettings.localize.localizedString("interactive_camp_cancel"));
 			resident.clearInteractiveMode();
 		}
 	}

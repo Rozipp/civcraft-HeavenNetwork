@@ -7,11 +7,11 @@ import java.util.Map;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
-import com.avrgaming.civcraft.construct.Village;
+import com.avrgaming.civcraft.construct.Camp;
 import com.avrgaming.civcraft.main.CivLog;
 import com.avrgaming.civcraft.main.CivMessage;
 
-public class ConfigVillageUpgrade {
+public class ConfigCampUpgrade {
 
 	public String id;
 	public String name;
@@ -23,11 +23,11 @@ public class ConfigVillageUpgrade {
 
 	public static HashMap<String, Integer> categories = new HashMap<String, Integer>();
 
-	public static void loadConfig(FileConfiguration cfg, Map<String, ConfigVillageUpgrade> upgrades) {
+	public static void loadConfig(FileConfiguration cfg, Map<String, ConfigCampUpgrade> upgrades) {
 		upgrades.clear();
 		List<Map<?, ?>> culture_levels = cfg.getMapList("upgrades");
 		for (Map<?, ?> level : culture_levels) {
-			ConfigVillageUpgrade upgrade = new ConfigVillageUpgrade();
+			ConfigCampUpgrade upgrade = new ConfigCampUpgrade();
 
 			upgrade.id = (String) level.get("id");
 			upgrade.name = (String) level.get("name");
@@ -44,11 +44,11 @@ public class ConfigVillageUpgrade {
 			upgrade.require_upgrade = (String) level.get("require_upgrade");
 			upgrades.put(upgrade.id, upgrade);
 		}
-		CivLog.info("Loaded " + upgrades.size() + " village upgrades.");
+		CivLog.info("Loaded " + upgrades.size() + " camp upgrades.");
 	}
 
-	public boolean isAvailable(Village village) {
-		if (village.hasUpgrade(this.id)) {
+	public boolean isAvailable(Camp camp) {
+		if (camp.hasUpgrade(this.id)) {
 			return false;
 		}
 
@@ -56,21 +56,21 @@ public class ConfigVillageUpgrade {
 			return true;
 		}
 
-		if (village.hasUpgrade(this.require_upgrade)) {
+		if (camp.hasUpgrade(this.require_upgrade)) {
 			return true;
 		}
 		return false;
 	}
 
-	public void processAction(Village village) {
+	public void processAction(Camp camp) {
 
 		if (this.annex == null) {
 			CivLog.warning("No annex found for upgrade:" + this.id);
 			return;
 		}
-		CivMessage.sendVillage(village, CivSettings.localize.localizedString("village_upgrade_" + annex + level));
+		CivMessage.sendCamp(camp, CivSettings.localize.localizedString("camp_upgrade_" + annex + level));
 //			default :
-//				CivLog.warning(CivSettings.localize.localizedString("var_village_upgrade_unknown", annex, id));
+//				CivLog.warning(CivSettings.localize.localizedString("var_camp_upgrade_unknown", annex, id));
 	}
 
 }

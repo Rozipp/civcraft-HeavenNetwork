@@ -577,7 +577,7 @@ public class Civilization extends SQLObject {
 		if (CivGlobal.anybodyHasTag(tag)) {
 			throw new CivException(CivSettings.localize.localizedString("var_civ_found_tagExists", tag));
 		}
-		if (resident.hasVillage()) {
+		if (resident.hasCamp()) {
 			throw new CivException(CivSettings.localize.localizedString("civ_found_mustleavecamp"));
 		}
 
@@ -666,7 +666,7 @@ public class Civilization extends SQLObject {
 		if (resident.getTown() != null && resident.getTown().isMayor(resident))
 			throw new CivException(CivSettings.localize.localizedString("var_town_found_errorIsMayor", resident.getTown().getName()));
 
-		if (resident.hasVillage()) throw new CivException(CivSettings.localize.localizedString("town_found_errorInvillage"));
+		if (resident.hasCamp()) throw new CivException(CivSettings.localize.localizedString("town_found_errorIncamp"));
 
 		Town existTown = CivGlobal.getTown(name);
 		if (existTown != null) throw new CivException(CivSettings.localize.localizedString("var_town_found_errorNameExists", name));

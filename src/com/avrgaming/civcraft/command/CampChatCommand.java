@@ -10,7 +10,7 @@ import com.avrgaming.civcraft.main.CivGlobal;
 import com.avrgaming.civcraft.main.CivMessage;
 import com.avrgaming.civcraft.object.Resident;
 
-public class VillageChatCommand implements CommandExecutor
+public class CampChatCommand implements CommandExecutor
 {
     public boolean onCommand(final CommandSender sender, final Command cmd, final String commandLabel, final String[] args) {
         if (!(sender instanceof Player)) {
@@ -23,15 +23,15 @@ public class VillageChatCommand implements CommandExecutor
             return false;
         }
         if (args.length == 0) {
-            resident.setVillageChat(!resident.isVillageChat());
+            resident.setCampChat(!resident.isCampChat());
             resident.setCivChat(false);
             resident.setTownChat(false);
             resident.save();
-            CivMessage.sendSuccess(sender, CivSettings.localize.localizedString("cmd_villagechat_modeSet") + " " + resident.isVillageChat());
+            CivMessage.sendSuccess(sender, CivSettings.localize.localizedString("cmd_campchat_modeSet") + " " + resident.isCampChat());
             return true;
         }
-        if (resident.getVillage() == null) {
-            CivMessage.sendError(sender, CivSettings.localize.localizedString("cmd_villagechat_error"));
+        if (resident.getCamp() == null) {
+            CivMessage.sendError(sender, CivSettings.localize.localizedString("cmd_campchat_error"));
             return false;
         }
         if (CivGlobal.isChatDisAllowed(player)) {
@@ -41,7 +41,7 @@ public class VillageChatCommand implements CommandExecutor
         for (final String arg : args) {
             fullArgs.append(arg).append(" ");
         }
-        CivMessage.sendVillageChat(resident.getVillage(), resident, "<%s> %s", fullArgs.toString());
+        CivMessage.sendCampChat(resident.getCamp(), resident, "<%s> %s", fullArgs.toString());
         return true;
     }
 }

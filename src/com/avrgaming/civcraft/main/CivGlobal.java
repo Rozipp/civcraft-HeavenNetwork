@@ -50,7 +50,7 @@ import com.avrgaming.civcraft.construct.Construct;
 import com.avrgaming.civcraft.construct.ConstructBlock;
 import com.avrgaming.civcraft.construct.ConstructChest;
 import com.avrgaming.civcraft.construct.ConstructSign;
-import com.avrgaming.civcraft.construct.Village;
+import com.avrgaming.civcraft.construct.Camp;
 import com.avrgaming.civcraft.construct.WarCamp;
 import com.avrgaming.civcraft.database.SQL;
 import com.avrgaming.civcraft.endgame.EndGameCondition;
@@ -130,7 +130,7 @@ public class CivGlobal {
 	private static Map<ChunkCoord, HashSet<Wall>> wallChunks = new ConcurrentHashMap<ChunkCoord, HashSet<Wall>>();
 	private static Map<BlockCoord, RoadBlock> roadBlocks = new ConcurrentHashMap<BlockCoord, RoadBlock>();
 	private static Map<BlockCoord, CustomMapMarker> customMapMarkers = new ConcurrentHashMap<BlockCoord, CustomMapMarker>();
-	private static Map<String, Village> villages = new ConcurrentHashMap<String, Village>();
+	private static Map<String, Camp> camps = new ConcurrentHashMap<String, Camp>();
 	public static HashSet<BlockCoord> vanillaGrowthLocations = new HashSet<BlockCoord>();
 	private static Map<BlockCoord, Market> markets = new ConcurrentHashMap<BlockCoord, Market>();
 	public static HashSet<String> researchedTechs = new HashSet<String>();
@@ -257,7 +257,7 @@ public class CivGlobal {
 			dateFormat = new SimpleDateFormat("M/dd/yy h:mm:ss a z");
 		}
 		sessionDatabase = new SessionDatabase();
-		loadVillages();
+		loadCamps();
 		loadCivs();
 		loadRelations();
 		loadCoalitions();
@@ -558,7 +558,7 @@ public class CivGlobal {
 		} finally {
 			SQL.close(rs, ps, context);
 		}
-		for (Village vill : CivGlobal.getVillages()) {
+		for (Camp vill : CivGlobal.getCamps()) {
 			vill.setSQLOwner(CivGlobal.getResident(vill.getOwnerName()));
 		}
 	}
@@ -590,8 +590,8 @@ public class CivGlobal {
 		}
 	}
 
-	public static void loadVillages() throws SQLException {
-		Village.loadStaticSettings();
+	public static void loadCamps() throws SQLException {
+		Camp.loadStaticSettings();
 
 		Connection context = null;
 		ResultSet rs = null;
@@ -599,13 +599,13 @@ public class CivGlobal {
 
 		try {
 			context = SQL.getGameConnection();
-			ps = context.prepareStatement("SELECT * FROM " + SQL.tb_prefix + Village.TABLE_NAME);
+			ps = context.prepareStatement("SELECT * FROM " + SQL.tb_prefix + Camp.TABLE_NAME);
 			rs = ps.executeQuery();
 
 			while (rs.next()) {
 				try {
-					Village village = new Village(rs);
-					CivGlobal.addVillage(village);
+					Camp camp = new Camp(rs);
+					CivGlobal.addCamp(camp);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -614,7 +614,7 @@ public class CivGlobal {
 			SQL.close(rs, ps, context);
 		}
 
-		CivLog.info("Loaded " + villages.size() + " Villages");
+		CivLog.info("Loaded " + camps.size() + " Camps");
 	}
 
 	public static void loadTownChunks() throws SQLException {
@@ -1527,48 +1527,48 @@ public class CivGlobal {
 		return caves.values();
 	}
 
-	// ------------ Village
-	public static void addVillage(Village village) {
-		villages.put(village.getName().toLowerCase(), village);
+	// ------------ Camp
+	public static void addCamp(Camp camp) {
+		camps.put(camp.getName().toLowerCase(), camp);
 	}
 
-	public static void removeVillage(String name) {
-		villages.remove(name.toLowerCase());
+	public static void removeCamp(String name) {
+		camps.remove(name.toLowerCase());
 	}
 
-	public static Village getVillage(String name) {
-		return villages.get(name.toLowerCase());
+	public static Camp getCamp(String name) {
+		return camps.get(name.toLowerCase());
 	}
 
-	public static Village getVillageFromId(int villageID) {
-		for (Village village : villages.values()) {
-			if (village.getId() == villageID)
-				return village;
+	public static Camp getCampFromId(int campID) {
+		for (Camp camp : camps.values()) {
+			if (camp.getId() == campID)
+				return camp;
 		}
 		return null;
 	}
 
-	public static Collection<Village> getVillages() {
-		return villages.values();
+	public static Collection<Camp> getCamps() {
+		return camps.values();
 	}
 
-//	// ------------- VillageBlock
-//	public static void addVillageBlock(VillageBlock cb) {
-//		villageBlocks.put(cb.getCoord(), cb);
+//	// ------------- CampBlock
+//	public static void addCampBlock(CampBlock cb) {
+//		campBlocks.put(cb.getCoord(), cb);
 //		ChunkCoord coord = new ChunkCoord(cb.getCoord());
-//		villageChunks.put(coord, cb.getVillage());
+//		campChunks.put(coord, cb.getCamp());
 //	}
-//	public static VillageBlock getVillageBlock(BlockCoord bcoord) {
-//		return villageBlocks.get(bcoord);
+//	public static CampBlock getCampBlock(BlockCoord bcoord) {
+//		return campBlocks.get(bcoord);
 //	}
-//	public static void removeVillageBlock(BlockCoord bcoord) {
-//		villageBlocks.remove(bcoord);
+//	public static void removeCampBlock(BlockCoord bcoord) {
+//		campBlocks.remove(bcoord);
 //	}
-//	public static Village getVillageFromChunk(ChunkCoord coord) {
-//		return villageChunks.get(coord);
+//	public static Camp getCampFromChunk(ChunkCoord coord) {
+//		return campChunks.get(coord);
 //	}
-//	public static void removeVillageChunk(ChunkCoord coord) {
-//		villageChunks.remove(coord);
+//	public static void removeCampChunk(ChunkCoord coord) {
+//		campChunks.remove(coord);
 //	}
 
 	// ------------- Market
@@ -1585,10 +1585,10 @@ public class CivGlobal {
 	}
 
 	// ---------- Total count function
-	public static int getTotalVillages() {
+	public static int getTotalCamps() {
 		int total = 0;
-		for (final Village village : getVillages()) {
-			if (village != null)
+		for (final Camp camp : getCamps()) {
+			if (camp != null)
 				++total;
 		}
 		return total;
@@ -2171,16 +2171,16 @@ public class CivGlobal {
 		}
 	}
 
-	public static void addVillageAppearance(final Resident resident) {
+	public static void addCampAppearance(final Resident resident) {
 		try {
 			getPlayer(resident);
 		} catch (CivException offline) {
 			return;
 		}
-		if (resident.getVillage() == null) {
+		if (resident.getCamp() == null) {
 			return;
 		}
-		resident.getVillage();
+		resident.getCamp();
 	}
 
 	public static String getFullNameTag(final Player var1) {
