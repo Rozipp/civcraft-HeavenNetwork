@@ -214,12 +214,12 @@ public class Structure extends Buildable {
 				this.undoFromTemplate();
 			} catch (IOException | CivException e1) {
 				e1.printStackTrace();
-				this.fancyDestroyStructureBlocks();
+				this.fancyDestroyConstructBlocks();
 			}
 
 			CivGlobal.removeStructure(this);
 			this.getTown().removeStructure(this);
-			this.unbindStructureBlocks();
+			this.unbindConstructBlocks();
 		}
 		this.setEnabled(false);
 		SQL.deleteNamedObject(this, TABLE_NAME);
@@ -229,7 +229,7 @@ public class Structure extends Buildable {
 		super.delete();
 		CivGlobal.removeStructure(this);
 		this.getTown().removeStructure(this);
-		this.unbindStructureBlocks();
+		this.unbindConstructBlocks();
 		this.setEnabled(false);
 		SQL.deleteNamedObject(this, TABLE_NAME);
 	}

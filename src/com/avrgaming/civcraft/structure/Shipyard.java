@@ -184,7 +184,7 @@ public class Shipyard extends WaterStructure {
                 structSign.setDirection(commandBlock.getData());
                 structSign.setAction("next");
                 structSign.update();
-                this.addBuildableSign(structSign);
+                this.addConstructSign(structSign);
                 CivGlobal.addConstructSign(structSign);
                 break;
             }
@@ -196,7 +196,7 @@ public class Shipyard extends WaterStructure {
                 structSign.setDirection(commandBlock.getData());
                 structSign.setAction("prev");
                 structSign.update();
-                this.addBuildableSign(structSign);
+                this.addConstructSign(structSign);
                 CivGlobal.addConstructSign(structSign);
                 break;
             }
@@ -208,7 +208,7 @@ public class Shipyard extends WaterStructure {
                 structSign.setDirection(commandBlock.getData());
                 structSign.setAction("respawn");
                 structSign.update();
-                this.addBuildableSign(structSign);
+                this.addConstructSign(structSign);
                 CivGlobal.addConstructSign(structSign);
                 this.respawnSign = structSign;
                 this.changeIndex(this.index);

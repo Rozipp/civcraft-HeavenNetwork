@@ -181,7 +181,7 @@ public class Townhall extends Structure implements RespawnLocationHolder {
 					}
 
 					structSign.setOwner(this);
-					this.addBuildableSign(structSign);
+					this.addConstructSign(structSign);
 					CivGlobal.addConstructSign(structSign);
 
 					break;

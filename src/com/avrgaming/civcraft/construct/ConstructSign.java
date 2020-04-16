@@ -96,7 +96,7 @@ import com.avrgaming.civcraft.util.BlockCoord;
 		this.direction = rs.getInt("direction");
 
 		if (this.owner != null) {
-			owner.addBuildableSign(this);
+			owner.addConstructSign(this);
 		}
 	}
 

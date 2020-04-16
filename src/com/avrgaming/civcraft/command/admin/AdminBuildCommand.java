@@ -128,11 +128,11 @@ public class AdminBuildCommand extends CommandBase {
 			throw new CivException(CivSettings.localize.localizedString("adcmd_build_wonderDoesNotExist") + " " + args[2]);
 		}
 
-		wonder.fancyDestroyStructureBlocks();
+		wonder.fancyDestroyConstructBlocks();
 		try {
 			wonder.getTown().removeWonder(wonder);
-			wonder.fancyDestroyStructureBlocks();
-			wonder.unbindStructureBlocks();
+			wonder.fancyDestroyConstructBlocks();
+			wonder.unbindConstructBlocks();
 			wonder.delete();
 		} catch (SQLException e) {
 			e.printStackTrace();

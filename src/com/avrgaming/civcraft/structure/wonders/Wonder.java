@@ -181,7 +181,7 @@ public class Wonder extends Buildable {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 			CivMessage.sendTown(getTown(), CivColor.Rose + CivSettings.localize.localizedString("wonder_undo_error"));
-			this.fancyDestroyStructureBlocks();
+			this.fancyDestroyConstructBlocks();
 		}
 
 		CivMessage.global(CivSettings.localize.localizedString("var_wonder_undo_broadcast",
@@ -193,7 +193,7 @@ public class Wonder extends Buildable {
 		CivMessage.sendTown(getTown(), CivSettings.localize.localizedString("var_structure_undo_refund",
 				this.getTown().getName(), refund, CivSettings.CURRENCY_NAME));
 
-		this.unbindStructureBlocks();
+		this.unbindConstructBlocks();
 
 		try {
 			delete();
@@ -250,8 +250,8 @@ public class Wonder extends Buildable {
 					this.getTown().getName()));
 			try {
 				this.getTown().removeWonder(this);
-				this.fancyDestroyStructureBlocks();
-				this.unbindStructureBlocks();
+				this.fancyDestroyConstructBlocks();
+				this.unbindConstructBlocks();
 				this.delete();
 			} catch (SQLException e) {
 				e.printStackTrace();

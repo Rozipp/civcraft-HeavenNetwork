@@ -347,12 +347,12 @@ public class Spy extends UnitMaterial {
 		if (processMissionResult(player, cc.getTown(), mission, failMod, 1.0)) {
 			CivMessage.global(CivColor.Yellow+CivSettings.localize.localizedString("missionBook_sabatoge_alert1")+CivColor.White+" "+CivSettings.localize.localizedString("missionBook_sabatoge_alert2",buildable.getDisplayName(),cc.getTown().getName()));
 			buildable.setHitpoints(0);
-			buildable.fancyDestroyStructureBlocks();
+			buildable.fancyDestroyConstructBlocks();
 			buildable.save();
 			
 			if (buildable instanceof Wonder) {
 				Wonder wonder = (Wonder)buildable;
-				wonder.unbindStructureBlocks();
+				wonder.unbindConstructBlocks();
 				try {
 					wonder.delete();
 				} catch (SQLException e) {

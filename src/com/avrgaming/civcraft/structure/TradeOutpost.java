@@ -295,7 +295,7 @@ public class TradeOutpost extends Structure {
 		createTradeGood();
 	}
 
-	public void fancyDestroyStructureBlocks() {
+	public void fancyDestroyConstructBlocks() {
 		for (BlockCoord coord : this.getConstructBlocks().keySet()) {
 
 			if (CivGlobal.getConstructChest(coord) != null) {

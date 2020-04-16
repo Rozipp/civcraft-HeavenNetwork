@@ -381,7 +381,7 @@ public class BuildAsyncTask extends CivAsyncTask {
 //			public void run() {
 		// Remove build task from town..
 		buildable.getTown().build_tasks.remove(this);
-		buildable.unbindStructureBlocks();
+		buildable.unbindConstructBlocks();
 		// remove wonder from town.
 		synchronized (buildable.getTown()) {
 			buildable.getTown().removeWonder(buildable);

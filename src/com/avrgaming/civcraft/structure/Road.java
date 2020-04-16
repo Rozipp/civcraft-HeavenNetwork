@@ -172,7 +172,7 @@ public class Road extends Structure {
 
 		CivGlobal.removeStructure(this);
 		this.getTown().removeStructure(this);
-		this.unbindStructureBlocks();
+		this.unbindConstructBlocks();
 
 		SQL.deleteNamedObject(this, TABLE_NAME);
 	}
@@ -624,7 +624,7 @@ public class Road extends Structure {
 		//can be overriden in subclasses.
 		CivMessage.global(CivSettings.localize.localizedString("var_road_destroySuccess", this.getDisplayName(), this.getTown().getName()));
 		this.setHitpoints(0);
-		this.fancyDestroyStructureBlocks();
+		this.fancyDestroyConstructBlocks();
 		try {
 			this.delete();
 		} catch (SQLException e) {
@@ -632,7 +632,7 @@ public class Road extends Structure {
 		}
 	}
 
-	public void fancyDestroyStructureBlocks() {
+	public void fancyDestroyConstructBlocks() {
 		for (BlockCoord coord : this.roadBlocks.keySet()) {
 
 			if (CivGlobal.getConstructChest(coord) != null) {

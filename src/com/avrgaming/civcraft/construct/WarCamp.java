@@ -512,7 +512,7 @@ public class WarCamp extends Construct implements RespawnLocationHolder {
 		}
 		this.getConstructBlocks().clear();
 
-		this.fancyDestroyStructureBlocks();
+		this.fancyDestroyConstructBlocks();
 		setWarCampBuilt();
 	}
 

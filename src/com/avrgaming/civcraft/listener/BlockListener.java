@@ -161,9 +161,9 @@ public class BlockListener implements Listener {
 					bcoord.setFromLocation(b.getLocation());
 					ConstructBlock bb = CivGlobal.getConstructBlock(bcoord);
 					if (bb != null) {
-						if (b.getType().isBurnable()) {
+//						if (b.getType().isBurnable()) {
 							event.setCancelled(true);
-						}
+//						}
 						return;
 					}
 

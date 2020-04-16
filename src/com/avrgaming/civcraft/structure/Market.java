@@ -212,7 +212,7 @@ public class Market extends Structure {
 		structSign.setAction(action);
 
 		structSign.setOwner(this);
-		this.addBuildableSign(structSign);
+		this.addConstructSign(structSign);
 		CivGlobal.addConstructSign(structSign);
 		
 		LinkedList<ConstructSign> signs = this.signIndex.get(id);

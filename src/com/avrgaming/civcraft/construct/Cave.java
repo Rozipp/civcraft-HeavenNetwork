@@ -208,7 +208,7 @@ public class Cave extends Construct {
 			structSign.setText(new String[] { "", "Нажми", "что бы", "переместится" });
 			structSign.setAction("spawn");
 			structSign.update();
-			this.addBuildableSign(structSign);
+			this.addConstructSign(structSign);
 			CivGlobal.addConstructSign(structSign);
 			break;
 		case "/mobspawn":

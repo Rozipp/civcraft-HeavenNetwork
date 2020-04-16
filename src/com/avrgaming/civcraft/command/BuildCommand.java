@@ -157,7 +157,7 @@ public class BuildCommand extends CommandBase {
 					CivColor.Yellow + nearest.getDisplayName() + CivColor.LightGreen, CivColor.Yellow + nearest.getCorner() + CivColor.LightGreen));
 			CivMessage.send(player, CivColor.LightGray + CivSettings.localize.localizedString("cmd_build_demolishNearestConfirmPrompt2"));
 
-			nearest.flashStructureBlocks();
+			nearest.flashConstructBlocks();
 			return;
 		}
 

@@ -1,5 +1,6 @@
 package com.avrgaming.civcraft.construct;
 
+import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -43,7 +44,6 @@ import com.avrgaming.civcraft.object.TownChunk;
 import com.avrgaming.civcraft.permission.PlotPermissions;
 import com.avrgaming.civcraft.structure.BuildableStatic;
 import com.avrgaming.civcraft.structure.RoadBlock;
-import com.avrgaming.civcraft.structure.Structure;
 import com.avrgaming.civcraft.template.Template;
 import com.avrgaming.civcraft.threading.CivAsyncTask;
 import com.avrgaming.civcraft.threading.TaskMaster;
@@ -216,8 +216,7 @@ public abstract class Construct extends SQLObject {
 //			ignoreBorders = true;
 //		}
 
-		Structure struct = CivGlobal.getStructure(new BlockCoord(centerBlock));
-		if (struct != null) {
+		if (CivGlobal.getConstructAt(new BlockCoord(centerBlock)) != null) {
 			throw new CivException(CivSettings.localize.localizedString("buildable_structureExistsHere"));
 		}
 
@@ -249,19 +248,25 @@ public abstract class Construct extends SQLObject {
 		 * XXX this needs to check actual blocks, not outlines cause thats more annoying
 		 * than actual problems caused by building into each other.
 		 */
-		// Iterator<Entry<BlockCoord, Structure>> iter =
-		// CivGlobal.getStructureIterator();
-		// while(iter.hasNext()) {
-		// Entry<BlockCoord, Structure> entry = iter.next();
-		// Structure s = entry.getValue();
-		//
-		// if (s.templateBoundingBox != null) {
-		// if (s.templateBoundingBox.overlaps(this.templateBoundingBox)) {
-		// throw new CivException("Cannot build structure here as it would overlap with
-		// a "+s.getDisplayName());
-		// }
-		// }
-		// }
+//		Iterator<Entry<BlockCoord, Structure>> iter = CivGlobal.getStructureIterator();
+//		while (Consiter.hasNext()) {
+//			Entry<BlockCoord, Structure> entry = iter.next();
+//			Structure s = entry.getValue();
+//
+//			if (s.templateBoundingBox != null) {
+//				if (s.templateBoundingBox.overlaps(this.templateBoundingBox)) {
+//					throw new CivException(
+//							"Cannot build structure here as it would overlap with a " + s.getDisplayName());
+//				}
+//			}
+//		}
+		//TODO
+//		for (Construct constr : CivGlobal.getStructures() ) {
+//			Rectangle a = new Rectangle();
+//			a.x =1;
+//			
+//			Rectangle b = new Rectangle(1, 2, 1, 1);
+//		}
 
 		onCheckBlockPAR();
 
@@ -522,7 +527,7 @@ public abstract class Construct extends SQLObject {
 					structSign.setAction(sb.keyvalues.get(key));
 				}
 				structSign.setOwner(this);
-				this.addBuildableSign(structSign);
+				this.addConstructSign(structSign);
 				CivGlobal.addConstructSign(structSign);
 				break;
 			case "/chest":
@@ -706,7 +711,7 @@ public abstract class Construct extends SQLObject {
 		}, 0);
 	}
 
-	public void unbindStructureBlocks() {
+	public void unbindConstructBlocks() {
 		for (BlockCoord coord : this.constructBlocks.keySet()) {
 			CivGlobal.removeConstructBlock(coord);
 		}
@@ -719,8 +724,8 @@ public abstract class Construct extends SQLObject {
 		this.constructBlocks.remove(coord);
 	}
 
-	// ------------- BuildableSign
-	public void addBuildableSign(ConstructSign s) {
+	// ------------- ConstructSign
+	public void addConstructSign(ConstructSign s) {
 		this.сonstructSigns.put(s.getCoord(), s);
 	}
 
@@ -736,7 +741,7 @@ public abstract class Construct extends SQLObject {
 		CivLog.info("No Sign action for this buildable?:" + this.getDisplayName());
 	}
 
-	// ------------ BuildableChest
+	// ------------ ConstructChest
 	public void addConstructChest(ConstructChest chest) {
 		this.сonstructChests.put(chest.getCoord(), chest);
 	}
@@ -810,11 +815,11 @@ public abstract class Construct extends SQLObject {
 		// can be overriden in subclasses.
 //		CivMessage.global(CivSettings.localize.localizedString("var_buildable_destroyedAlert", this.getDisplayName(), this.getTown().getName()));
 		this.hitpoints = 0;
-		this.fancyDestroyStructureBlocks();
+		this.fancyDestroyConstructBlocks();
 		this.save();
 	}
 
-	public void fancyDestroyStructureBlocks() {
+	public void fancyDestroyConstructBlocks() {
 		class SyncTask implements Runnable {
 			@Override
 			public void run() {
@@ -903,7 +908,7 @@ public abstract class Construct extends SQLObject {
 	}
 
 	/* Plays a fire effect on all of the structure blocks for this structure. */
-	public void flashStructureBlocks() {
+	public void flashConstructBlocks() {
 		World world = Bukkit.getWorld(this.getCorner().getWorldname());
 		for (BlockCoord coord : constructBlocks.keySet()) {
 			if (CivCraft.civRandom.nextDouble() < 0.3)

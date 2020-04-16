@@ -121,8 +121,8 @@ public class Wall extends Structure {
 	}
 
 	@Override
-	public void unbindStructureBlocks() {
-		super.unbindStructureBlocks();
+	public void unbindConstructBlocks() {
+		super.unbindConstructBlocks();
 	}
 
 	@Override
@@ -145,7 +145,7 @@ public class Wall extends Structure {
 		}
 		CivGlobal.removeStructure(this);
 		this.getTown().removeStructure(this);
-		this.unbindStructureBlocks();
+		this.unbindConstructBlocks();
 
 		SQL.deleteNamedObject(this, TABLE_NAME);
 	}

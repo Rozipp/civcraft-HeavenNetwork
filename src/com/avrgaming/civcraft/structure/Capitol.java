@@ -176,7 +176,7 @@ public class Capitol extends Townhall {
 				structSign.setDirection(commandBlock.getData());
 				structSign.setAction("next");
 				structSign.update();
-				this.addBuildableSign(structSign);
+				this.addConstructSign(structSign);
 				CivGlobal.addConstructSign(structSign);
 
 			} else
@@ -188,7 +188,7 @@ public class Capitol extends Townhall {
 					structSign.setDirection(commandBlock.getData());
 					structSign.setAction("prev");
 					structSign.update();
-					this.addBuildableSign(structSign);
+					this.addConstructSign(structSign);
 					CivGlobal.addConstructSign(structSign);
 
 				} else
@@ -200,7 +200,7 @@ public class Capitol extends Townhall {
 						structSign.setDirection(commandBlock.getData());
 						structSign.setAction("respawn");
 						structSign.update();
-						this.addBuildableSign(structSign);
+						this.addConstructSign(structSign);
 						CivGlobal.addConstructSign(structSign);
 
 						this.respawnSign = structSign;

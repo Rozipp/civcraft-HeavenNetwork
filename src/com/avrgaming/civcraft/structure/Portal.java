@@ -82,7 +82,7 @@ extends Structure {
             structSign.setDirection(commandBlock.getData());
             structSign.setAction("teleport");
             structSign.update();
-            this.addBuildableSign(structSign);
+            this.addConstructSign(structSign);
             CivGlobal.addConstructSign(structSign);
             if (this.spawnLocation == null) {
                 this.spawnLocation = structSign.getCoord().getLocation();

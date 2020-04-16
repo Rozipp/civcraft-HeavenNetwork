@@ -296,7 +296,7 @@ public class Barracks extends Structure {
 				structSign.setDirection(sb.getData());
 				structSign.setAction("prev");
 				structSign.update();
-				this.addBuildableSign(structSign);
+				this.addConstructSign(structSign);
 				CivGlobal.addConstructSign(structSign);
 
 				break;
@@ -312,7 +312,7 @@ public class Barracks extends Structure {
 
 				this.unitNameSign = structSign;
 
-				this.addBuildableSign(structSign);
+				this.addConstructSign(structSign);
 				CivGlobal.addConstructSign(structSign);
 
 				break;
@@ -325,7 +325,7 @@ public class Barracks extends Structure {
 				structSign.setDirection(sb.getData());
 				structSign.setAction("next");
 				structSign.update();
-				this.addBuildableSign(structSign);
+				this.addConstructSign(structSign);
 				CivGlobal.addConstructSign(structSign);
 
 				break;
@@ -338,7 +338,7 @@ public class Barracks extends Structure {
 				structSign.setDirection(sb.getData());
 				structSign.setAction("train");
 				structSign.update();
-				this.addBuildableSign(structSign);
+				this.addConstructSign(structSign);
 				CivGlobal.addConstructSign(structSign);
 
 				break;
@@ -351,7 +351,7 @@ public class Barracks extends Structure {
 				structSign.setDirection(sb.getData());
 				structSign.setAction("");
 				structSign.update();
-				this.addBuildableSign(structSign);
+				this.addConstructSign(structSign);
 				CivGlobal.addConstructSign(structSign);
 
 				this.progresBar.put(Integer.valueOf(sb.keyvalues.get("id")), structSign);
@@ -366,7 +366,7 @@ public class Barracks extends Structure {
 				structSign.setDirection(sb.getData());
 				structSign.setAction("repair_item");
 				structSign.update();
-				this.addBuildableSign(structSign);
+				this.addConstructSign(structSign);
 				CivGlobal.addConstructSign(structSign);
 
 				break;

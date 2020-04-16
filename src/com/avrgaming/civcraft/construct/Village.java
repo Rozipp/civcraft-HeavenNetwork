@@ -32,6 +32,8 @@ import com.avrgaming.civcraft.util.ItemManager;
 import com.avrgaming.civcraft.util.MultiInventory;
 import com.avrgaming.civcraft.util.SimpleBlock;
 import com.avrgaming.civcraft.util.TagManager;
+import com.avrgaming.civcraft.war.War;
+
 import gpl.AttributeUtil;
 import lombok.Getter;
 import lombok.Setter;
@@ -64,6 +66,7 @@ import org.bukkit.block.Furnace;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -448,7 +451,7 @@ public class Village extends Construct {
 		try {
 			this.undoFromTemplate();
 		} catch (IOException | CivException e) {
-			this.fancyDestroyStructureBlocks();
+			this.fancyDestroyConstructBlocks();
 		}
 		try {
 			this.delete();
@@ -462,7 +465,7 @@ public class Village extends Construct {
 		try {
 			this.undoFromTemplate();
 		} catch (IOException | CivException e) {
-			this.fancyDestroyStructureBlocks();
+			this.fancyDestroyConstructBlocks();
 		}
 		try {
 			this.delete();
@@ -492,19 +495,34 @@ public class Village extends Construct {
 			int level = 0;
 			String annex = null;
 			String chestId = null;
+			ConstructSign structSign = null;
 			switch (sb.command) {
 			case "/gardensign":
 				if (annexLevel.getOrDefault("growth", 0) == 0) {
-					ItemManager.setTypeId(absCoord.getBlock(), ItemManager.getMaterialId(Material.SIGN_POST));
-					ItemManager.setData(absCoord.getBlock(), sb.getData());
-					
-					Sign sign = (Sign)absCoord.getBlock().getState();
-					sign.setLine(0, "Garden Disabled");
-					sign.setLine(1, "Upgrade using");
-					sign.setLine(2, "/camp upgrade");
-					sign.setLine(3, "command");
-					sign.update();
-					this.addConstructBlock(absCoord,false);
+					structSign = CivGlobal.getConstructSign(absCoord);
+					if (structSign == null)
+						structSign = new ConstructSign(absCoord, this);
+					ItemManager.setTypeIdAndData(absCoord.getBlock(), sb.getType(), sb.getData(), true);
+
+					structSign.setDirection(ItemManager.getData(absCoord.getBlock().getState()));
+					structSign.setOwner(this);
+					structSign.setText(new String[] { "Сад виключен", "Нажми сюда или введи", "/village upgrade",
+							"что бы влючить" });
+					structSign.setAction("gardenupgrade");
+					structSign.update();
+					this.addConstructSign(structSign);
+					CivGlobal.addConstructSign(structSign);
+
+//					ItemManager.setTypeId(absCoord.getBlock(), ItemManager.getMaterialId(Material.SIGN_POST));
+//					ItemManager.setData(absCoord.getBlock(), sb.getData());
+//					
+//					Sign sign = (Sign)absCoord.getBlock().getState();
+//					sign.setLine(0, "Garden Disabled");
+//					sign.setLine(1, "Upgrade using");
+//					sign.setLine(2, "/camp upgrade");
+//					sign.setLine(3, "command");
+//					sign.update();
+//					this.addConstructBlock(absCoord,false);
 				} else {
 					ItemManager.setTypeId(absCoord.getBlock(), ItemManager.getMaterialId(Material.AIR));
 					this.removeContructBlock(absCoord);
@@ -560,7 +578,6 @@ public class Village extends Construct {
 					chestId = "trommelnull";
 					break;
 				}
-				// пример 21:7:21,63:12,/chest,id:SecondSawmillResult,level:2,annex:sawmill,
 				if (annexLevel.getOrDefault(annex, 0) >= level) {
 					ConstructChest structChest = CivGlobal.getConstructChest(absCoord);
 					if (structChest == null)
@@ -574,20 +591,28 @@ public class Village extends Construct {
 					ItemManager.setData(absCoord.getBlock(), data2);
 
 				} else {
-					try {
-						ItemManager.setTypeId(absCoord.getBlock(), ItemManager.getMaterialId(Material.SIGN_POST));
-						ItemManager.setData(absCoord.getBlock(), sb.getData());
-						Sign sign = (Sign) absCoord.getBlock().getState();
-						sign.setLine(0,
-								CivSettings.localize.localizedString("village_" + annex + "UpgradeSign", level));
-						// "camp_sifterUpgradeSign1"
-						sign.setLine(1, CivSettings.localize.localizedString("upgradeUsing_SignText"));
-						sign.setLine(2, "/village upgrade");
-						sign.setLine(3, "");
-						sign.update();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+					structSign = CivGlobal.getConstructSign(absCoord);
+					if (structSign == null)
+						structSign = new ConstructSign(absCoord, this);
+					ItemManager.setTypeIdAndData(absCoord.getBlock(), sb.getType(), sb.getData(), true);
+					structSign.setDirection(ItemManager.getData(absCoord.getBlock().getState()));
+					structSign.setOwner(this);
+					structSign.setText(new String[] { "Дробилка виключена", "Нажми сюда или введи", "/village upgrade",
+							"что бы влючить" });
+					structSign.setAction("trommelupgrade");
+					structSign.update();
+					this.addConstructSign(structSign);
+					CivGlobal.addConstructSign(structSign);
+
+//					ItemManager.setTypeId(absCoord.getBlock(), ItemManager.getMaterialId(Material.SIGN_POST));
+//					ItemManager.setData(absCoord.getBlock(), sb.getData());
+//					Sign sign = (Sign) absCoord.getBlock().getState();
+//					sign.setLine(0, CivSettings.localize.localizedString("village_" + annex + "UpgradeSign", level));
+//					// "camp_sifterUpgradeSign1"
+//					sign.setLine(1, CivSettings.localize.localizedString("upgradeUsing_SignText"));
+//					sign.setLine(2, "/village upgrade");
+//					sign.setLine(3, "");
+//					sign.update();
 				}
 				this.addConstructBlock(absCoord, false);
 				break;
@@ -607,18 +632,19 @@ public class Village extends Construct {
 					ItemManager.setTypeId(absCoord.getBlock(), ItemManager.getMaterialId(Material.CHEST));
 					byte data2 = CivData.convertSignDataToChestData((byte) sb.getData());
 					ItemManager.setData(absCoord.getBlock(), data2);
-
 				} else {
-					ItemManager.setTypeId(absCoord.getBlock(), ItemManager.getMaterialId(Material.SIGN_POST));
-					ItemManager.setData(absCoord.getBlock(), sb.getData());
-					Sign sign = (Sign) absCoord.getBlock().getState();
-					sign.setLine(0, CivSettings.localize.localizedString("village_" + annex + "UpgradeSign", level));
-					// "camp_longhouseSign1"
-					// "camp_longhouseSign2"
-					sign.setLine(1, CivSettings.localize.localizedString("upgradeUsing_SignText"));
-					sign.setLine(2, "/village upgrade");
-					sign.setLine(3, "");
-					sign.update();
+					structSign = CivGlobal.getConstructSign(absCoord);
+					if (structSign == null)
+						structSign = new ConstructSign(absCoord, this);
+					ItemManager.setTypeIdAndData(absCoord.getBlock(), sb.getType(), sb.getData(), true);
+					structSign.setDirection(ItemManager.getData(absCoord.getBlock().getState()));
+					structSign.setOwner(this);
+					structSign.setText(new String[] { "Большой дом виключен", "Нажми сюда или введи", "/village upgrade",
+							"что бы влючить" });
+					structSign.setAction("longhouseupgrade");
+					structSign.update();
+					this.addConstructSign(structSign);
+					CivGlobal.addConstructSign(structSign);
 				}
 				this.addConstructBlock(absCoord, false);
 				break;
@@ -705,6 +731,72 @@ public class Village extends Construct {
 				this.addConstructBlock(absCoord, false);
 				break;
 			}
+		}
+	}
+
+	@Override
+	public void processSignAction(Player player, ConstructSign sign, PlayerInteractEvent event) {
+		// int special_id = Integer.valueOf(sign.getAction());
+		Resident resident = CivGlobal.getResident(player);
+		if (resident == null)
+			return;
+		if (!this.getOwnerResident().equals(resident)) {
+			CivMessage.sendError(player, "Вы не хозяин поселения");
+			return;
+		}
+
+//		Boolean hasPermission = false;
+//		if ((resident.getTown().isMayor(resident)) || (resident.getTown().getAssistantGroup().hasMember(resident))
+//				|| (resident.getCiv().getLeaderGroup().hasMember(resident))
+//				|| (resident.getCiv().getAdviserGroup().hasMember(resident))) {
+//			hasPermission = true;
+//		}
+		switch (sign.getAction()) {
+		case "gardenupgrade":
+			processSignActionUpgrade(player, "v_up_garden1", sign);
+			break;
+		case "trommelupgrade":
+			processSignActionUpgrade(player, "v_up_trommel1", sign);
+			break;
+		case "longhouseupgrade":
+			processSignActionUpgrade(player, "v_up_longhouse1", sign);
+			break;	
+		}
+	}
+	
+	private void processSignActionUpgrade(Player player, String upgradeId, ConstructSign sign) {
+		Resident resident = CivGlobal.getResident(player);
+		if (resident == null)
+			return;
+		ConfigVillageUpgrade upgrade = CivSettings.villageUpgrades.get(upgradeId);
+		if (upgrade == null) {
+			CivLog.error(
+					CivSettings.localize.localizedString("var_cmd_village_upgrade_buyInvalid", upgradeId));
+			return;
+		}
+		if (this.hasUpgrade(upgrade.id)) {
+			CivLog.error(CivSettings.localize.localizedString("cmd_village_upgrade_buyOwned"));
+			return;
+		}
+
+		if (!upgrade.isAvailable(this))
+			return;
+
+		if (resident.getConstructSignConfirm() != null && resident.getConstructSignConfirm().equals(sign)) {
+			try {
+				this.purchaseUpgrade(upgrade);
+			} catch (CivException e) {
+				e.printStackTrace();
+				CivMessage.sendSuccess(player, "Неизвесная ошибка улучшения");
+				return;
+			}
+			CivMessage.sendSuccess(player,
+					CivSettings.localize.localizedString("var_cmd_village_upgrade_buySuccess", upgrade.name));
+		} else {
+			CivMessage.sendSuccess(player,
+					"Для покупки улучшения " + upgrade.name + " у вас должно быть " + upgrade.cost + " монет.");
+			CivMessage.sendSuccess(player, "Повторно нажмите на табличку для подтверждения покупки");
+			resident.setConstructSignConfirm(sign);
 		}
 	}
 
@@ -998,8 +1090,7 @@ public class Village extends Construct {
 
 		int villageControlHitpoints;
 		try {
-			villageControlHitpoints = CivSettings.getInteger(CivSettings.warConfig,
-					"war.control_block_hitpoints_camp");
+			villageControlHitpoints = CivSettings.getInteger(CivSettings.warConfig, "war.control_block_hitpoints_camp");
 		} catch (InvalidConfiguration e) {
 			e.printStackTrace();
 			villageControlHitpoints = 100;

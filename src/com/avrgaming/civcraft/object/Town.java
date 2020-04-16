@@ -393,13 +393,13 @@ public class Town extends SQLObject {
 
 		if (this.wonders != null) {
 			for (Wonder wonder : wonders.values()) {
-				wonder.unbindStructureBlocks();
+				wonder.unbindConstructBlocks();
 				try {
 					wonder.undoFromTemplate();
 				} catch (IOException | CivException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-					wonder.fancyDestroyStructureBlocks();
+					wonder.fancyDestroyConstructBlocks();
 				}
 				wonder.delete();
 			}
