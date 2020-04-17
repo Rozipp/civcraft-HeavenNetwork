@@ -206,7 +206,7 @@ public class BuildableStatic {
 				throw new CivException("не найдено здание " + buildable.getReplaceStructure() + " для замены");
 
 			BlockCoord bc = replaceStructure.getCorner();
-			cornerLoc = new Location(cornerLoc.getWorld(), bc.getX(), bc.getY() + replaceStructure.getTemplateYShift(), bc.getZ());
+			cornerLoc = new Location(cornerLoc.getWorld(), bc.getX(), bc.getY() - replaceStructure.getTemplateYShift() + buildable.getTemplateYShift(), bc.getZ());
 			cornerLoc.setDirection(dir);
 		}
 		buildable.setCorner(new BlockCoord(cornerLoc));
