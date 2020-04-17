@@ -143,7 +143,7 @@ public class AdminBuildCommand extends CommandBase {
 	public void repair_cmd() throws CivException {
 		Player player = getPlayer();
 
-		Buildable nearest = CivGlobal.getNearestBuildable(player.getLocation());
+		Buildable nearest = CivGlobal.getNearestStructure(player.getLocation());
 
 		if (nearest == null) {
 			throw new CivException(CivSettings.localize.localizedString("adcmd_build_StructNotFound"));

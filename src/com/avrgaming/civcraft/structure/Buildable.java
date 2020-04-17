@@ -1,11 +1,3 @@
-/************************************************************************* AVRGAMING LLC __________________
- * 
- * [2013] AVRGAMING LLC All Rights Reserved.
- * 
- * NOTICE: All information contained herein is, and remains the property of AVRGAMING LLC and its suppliers, if any. The intellectual and technical concepts
- * contained herein are proprietary to AVRGAMING LLC and its suppliers and may be covered by U.S. and Foreign Patents, patents in process, and are protected by
- * trade secret or copyright law. Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is
- * obtained from AVRGAMING LLC. */
 package com.avrgaming.civcraft.structure;
 
 import java.io.IOException;
@@ -14,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Location;
@@ -25,6 +18,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
 import com.avrgaming.civcraft.components.Component;
 import com.avrgaming.civcraft.config.CivSettings;
 import com.avrgaming.civcraft.config.ConfigBuildableInfo;
@@ -66,14 +60,12 @@ import com.wimbli.WorldBorder.Config;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 public abstract class Buildable extends Construct {
-
 	protected BlockCoord mobSpawnerCoord;
 
-	private ConfigBuildableInfo info = new ConfigBuildableInfo(); // Blank buildable info for buildables which do not
-																	// have configs.
+	private ConfigBuildableInfo info = new ConfigBuildableInfo();
 	public int blocksCompleted = 0;
 	public int savedBlockCount = 0;
 
@@ -190,12 +182,10 @@ public abstract class Buildable extends Construct {
 	}
 
 	// ------------- Build ----------------------
-	public void afterBuildCommand(Player player, Location centerLoc) throws CivException, IOException {
+	public void newBiuldSetTemplate(Player player, Location centerLoc) throws CivException, IOException {
 		// children override for wall and road
-		/*
-		 * Look for any custom template perks and ask the player if they want to use
-		 * them.
-		 */
+		/* Look for any custom template perks and ask the player if they want to use
+		 * them. */
 		Resident resident = CivGlobal.getResident(player);
 		ArrayList<Perk> perkList = this.getTown().getTemplatePerks(this, resident, this.info);
 		ArrayList<Perk> personalUnboundPerks = resident.getUnboundTemplatePerks(perkList, this.info);
@@ -205,47 +195,32 @@ public abstract class Buildable extends Construct {
 
 			/* Build an inventory full of templates to select. */
 			Inventory inv = Bukkit.getServer().createInventory(player, Book.MAX_CHEST_SIZE * 9);
-			ItemStack infoRec = LoreGuiItem.build(
-					CivSettings.localize.localizedString("buildable_lore_default") + " " + this.getDisplayName(),
-					ItemManager.getMaterialId(Material.WRITTEN_BOOK), 0,
-					CivColor.Gold + CivSettings.localize.localizedString("loreGui_template_clickToBuild"));
+			ItemStack infoRec = LoreGuiItem.build(CivSettings.localize.localizedString("buildable_lore_default") + " " + this.getDisplayName(), ItemManager.getMaterialId(Material.WRITTEN_BOOK), 0, CivColor.Gold + CivSettings.localize
+					.localizedString("loreGui_template_clickToBuild"));
 			infoRec = LoreGuiItem.setAction(infoRec, "BuildWithTemplate");
 			inv.addItem(infoRec);
 
 			for (Perk perk : perkList) {
-				infoRec = LoreGuiItem.build(perk.getDisplayName(), perk.configPerk.type_id, perk.configPerk.data,
-						CivColor.Gold + "<Click To Build>",
-						CivColor.Gray + "Provided by: " + CivColor.LightBlue + perk.provider);
+				infoRec = LoreGuiItem.build(perk.getDisplayName(), perk.configPerk.type_id, perk.configPerk.data, CivColor.Gold + "<Click To Build>", CivColor.Gray + "Provided by: " + CivColor.LightBlue + perk.provider);
 				infoRec = LoreGuiItem.setAction(infoRec, "BuildWithTemplate");
 				infoRec = LoreGuiItem.setActionData(infoRec, "perk", perk.getConfigId());
 				inv.addItem(infoRec);
 			}
 			for (Perk perk : personalUnboundPerks) {
-				infoRec = LoreGuiItem.build(perk.getDisplayName(), CivData.BEDROCK, perk.configPerk.data,
-						CivColor.Gold + CivSettings.localize.localizedString("loreGui_template_clickToBuild"),
-						CivColor.Gray + CivSettings.localize.localizedString("loreGui_template_unbound"),
-						CivColor.Gray + CivSettings.localize.localizedString("loreGui_template_unbound2"),
-						CivColor.Gray + CivSettings.localize.localizedString("loreGui_template_unbound3"),
-						CivColor.Gray + CivSettings.localize.localizedString("loreGui_template_unbound4"),
-						CivColor.Gray + CivSettings.localize.localizedString("loreGui_template_unbound5"));
+				infoRec = LoreGuiItem.build(perk.getDisplayName(), CivData.BEDROCK, perk.configPerk.data, CivColor.Gold + CivSettings.localize.localizedString("loreGui_template_clickToBuild"), CivColor.Gray + CivSettings.localize
+						.localizedString("loreGui_template_unbound"), CivColor.Gray + CivSettings.localize.localizedString("loreGui_template_unbound2"), CivColor.Gray + CivSettings.localize.localizedString("loreGui_template_unbound3"),
+						CivColor.Gray + CivSettings.localize.localizedString("loreGui_template_unbound4"), CivColor.Gray + CivSettings.localize.localizedString("loreGui_template_unbound5"));
 				infoRec = LoreGuiItem.setAction(infoRec, "ActivatePerk");
 				infoRec = LoreGuiItem.setActionData(infoRec, "perk", perk.getConfigId());
 			}
-			/*
-			 * We will resume by calling buildPlayerPreview with the template when a gui
-			 * item is clicked.
-			 */
+			/* We will resume by calling buildPlayerPreview with the template when a gui
+			 * item is clicked. */
 			player.openInventory(inv);
 			return;
 		}
 
-		try {
-			this.setTemplate(Template.getTemplate(Template.getTemplateFilePath(centerLoc, this.getInfo(), null)));
-			BuildableStatic.buildPlayerPreview(player, centerLoc, this);
-		} catch (CivException | IOException e) {
-			e.printStackTrace();
-			throw e;
-		}
+		this.setTemplate(Template.getTemplate(Template.getTemplateFilePath(centerLoc, this.getInfo(), null)));
+		BuildableStatic.buildPlayerPreview(player, centerLoc, this);
 	}
 
 	protected void startBuildTask() {
@@ -306,24 +281,16 @@ public abstract class Buildable extends Construct {
 				double dist = townhall.getCenterLocation().distanceSquared(centerBlock.getLocation());
 				if (dist < minDistance * minDistance) {
 					DecimalFormat df = new DecimalFormat();
-					throw new CivException(CivSettings.localize.localizedString("var_settler_errorTooClose",
-							town.getName(), df.format(Math.sqrt(dist)), minDistance));
+					throw new CivException(CivSettings.localize.localizedString("var_settler_errorTooClose", town.getName(), df.format(Math.sqrt(dist)), minDistance));
 				}
 			}
 		}
 
-		if (this.getConfigId().equals("s_shipyard") || this.getConfigId().equals("s_arrowship")
-				|| this.getConfigId().equals("s_scoutship") || this.getConfigId().equals("s_cannonship")
-				|| this.getConfigId().equals("ti_tradeship")
-				|| this.getConfigId().equals("w_grand_ship_ingermanland")) {
-			if (!centerBlock.getBiome().equals(Biome.OCEAN) && !centerBlock.getBiome().equals(Biome.BEACHES)
-					&& !centerBlock.getBiome().equals(Biome.STONE_BEACH)
-					&& !centerBlock.getBiome().equals(Biome.COLD_BEACH)
-					&& !centerBlock.getBiome().equals(Biome.DEEP_OCEAN) && !centerBlock.getBiome().equals(Biome.RIVER)
-					&& !centerBlock.getBiome().equals(Biome.FROZEN_OCEAN)
-					&& !centerBlock.getBiome().equals(Biome.FROZEN_RIVER)) {
-				throw new CivException(
-						CivSettings.localize.localizedString("var_buildable_notEnoughWater", this.getDisplayName()));
+		if (this.getConfigId().equals("s_shipyard") || this.getConfigId().equals("s_arrowship") || this.getConfigId().equals("s_scoutship") || this.getConfigId().equals("s_cannonship") || this.getConfigId().equals("ti_tradeship") || this
+				.getConfigId().equals("w_grand_ship_ingermanland")) {
+			if (!centerBlock.getBiome().equals(Biome.OCEAN) && !centerBlock.getBiome().equals(Biome.BEACHES) && !centerBlock.getBiome().equals(Biome.STONE_BEACH) && !centerBlock.getBiome().equals(Biome.COLD_BEACH) && !centerBlock.getBiome()
+					.equals(Biome.DEEP_OCEAN) && !centerBlock.getBiome().equals(Biome.RIVER) && !centerBlock.getBiome().equals(Biome.FROZEN_OCEAN) && !centerBlock.getBiome().equals(Biome.FROZEN_RIVER)) {
+				throw new CivException(CivSettings.localize.localizedString("var_buildable_notEnoughWater", this.getDisplayName()));
 			}
 		}
 
@@ -377,13 +344,10 @@ public abstract class Buildable extends Construct {
 			throw new CivException(CivSettings.localize.localizedString("buildable_errorHeightLimit"));
 		}
 
-		/*
-		 * Check that we're not overlapping with another structure's template outline.
-		 */
-		/*
-		 * XXX this needs to check actual blocks, not outlines cause thats more annoying
-		 * than actual problems caused by building into each other.
-		 */
+		/* Check that we're not overlapping with another structure's template
+		 * outline. */
+		/* XXX this needs to check actual blocks, not outlines cause thats more annoying
+		 * than actual problems caused by building into each other. */
 		// Iterator<Entry<BlockCoord, Structure>> iter =
 		// CivGlobal.getStructureIterator();
 		// while(iter.hasNext()) {
@@ -411,11 +375,9 @@ public abstract class Buildable extends Construct {
 						throw new CivException(CivSettings.localize.localizedString("cannotBuild_chestInWay"));
 
 					TownChunk tc = CivGlobal.getTownChunk(b.getLocation());
-					if (tc != null
-							&& !tc.perms.hasPermission(PlotPermissions.Type.DESTROY, CivGlobal.getResident(player))) {
+					if (tc != null && !tc.perms.hasPermission(PlotPermissions.Type.DESTROY, CivGlobal.getResident(player))) {
 						// Make sure we have permission to destroy any block in this area.
-						throw new CivException(CivSettings.localize.localizedString("cannotBuild_needPermissions") + " "
-								+ b.getX() + "," + b.getY() + "," + b.getZ());
+						throw new CivException(CivSettings.localize.localizedString("cannotBuild_needPermissions") + " " + b.getX() + "," + b.getY() + "," + b.getZ());
 					}
 
 					BlockCoord coord = new BlockCoord(b);
@@ -530,8 +492,6 @@ public abstract class Buildable extends Construct {
 
 	public abstract void updateBuildProgess();
 
-	public abstract void build(Player player) throws Exception;
-
 	public abstract void onComplete();
 
 	public void onPostBuild(BlockCoord absCoord, SimpleBlock commandBlock) {
@@ -571,24 +531,20 @@ public abstract class Buildable extends Construct {
 		boolean wasTenPercent = false;
 		if (hit.getOwner().isDestroyed()) {
 			if (player != null) {
-				CivMessage.sendError(player, CivSettings.localize.localizedString("var_buildable_alreadyDestroyed",
-						hit.getOwner().getDisplayName()));
+				CivMessage.sendError(player, CivSettings.localize.localizedString("var_buildable_alreadyDestroyed", hit.getOwner().getDisplayName()));
 			}
 			return;
 		}
 
 		if ((this instanceof TradeOutpost || this instanceof FishingBoat) && player != null) {
-			CivMessage.sendError(player, CivSettings.localize.localizedString("var_buildable_cannotBeBroken",
-					"§6" + hit.getOwner().getDisplayName() + "§c"));
+			CivMessage.sendError(player, CivSettings.localize.localizedString("var_buildable_cannotBeBroken", "§6" + hit.getOwner().getDisplayName() + "§c"));
 			return;
 		}
 
 		Construct constrOwner = hit.getOwner();
-		if (!((constrOwner instanceof Buildable) && ((Buildable) constrOwner).isComplete()
-				|| (hit.getOwner() instanceof Wonder))) {
+		if (!((constrOwner instanceof Buildable) && ((Buildable) constrOwner).isComplete() || (hit.getOwner() instanceof Wonder))) {
 			if (player != null) {
-				CivMessage.sendError(player, CivSettings.localize.localizedString("var_buildable_underConstruction",
-						hit.getOwner().getDisplayName()));
+				CivMessage.sendError(player, CivSettings.localize.localizedString("var_buildable_underConstruction", hit.getOwner().getDisplayName()));
 			}
 			return;
 		}
@@ -603,8 +559,7 @@ public abstract class Buildable extends Construct {
 					}
 				}
 				if (!allDestroyed) {
-					CivMessage.sendError(player, CivSettings.localize.localizedString("var_buildable_cannotAttackNeu",
-							this.getTown().getName()));
+					CivMessage.sendError(player, CivSettings.localize.localizedString("var_buildable_cannotAttackNeu", this.getTown().getName()));
 					return;
 				}
 			} else {
@@ -617,8 +572,7 @@ public abstract class Buildable extends Construct {
 					}
 				}
 				if (!allDestroyed) {
-					CivMessage.sendError(player, CivSettings.localize.localizedString("var_buildable_cannotAttackNeu",
-							this.getTown().getName()));
+					CivMessage.sendError(player, CivSettings.localize.localizedString("var_buildable_cannotAttackNeu", this.getTown().getName()));
 					return;
 				}
 			}
@@ -641,23 +595,15 @@ public abstract class Buildable extends Construct {
 		if (player != null) {
 			Resident resident = CivGlobal.getResident(player);
 			if (resident.isCombatInfo()) {
-				CivMessage.send(player,
-						CivColor.LightGray + CivSettings.localize.localizedString("var_buildable_OnDamageSuccess",
-								hit.getOwner().getDisplayName(),
-								(hit.getOwner().getHitpoints() + "/" + hit.getOwner().getMaxHitPoints())));
+				CivMessage.send(player, CivColor.LightGray + CivSettings.localize.localizedString("var_buildable_OnDamageSuccess", hit.getOwner().getDisplayName(), (hit.getOwner().getHitpoints() + "/" + hit.getOwner().getMaxHitPoints())));
 			}
 		}
 	}
 
 	public void onDamageNotification(Player player, ConstructDamageBlock hit) {
-		CivMessage.send(player,
-				CivColor.LightGray + CivSettings.localize.localizedString("var_buildable_OnDamageSuccess",
-						hit.getOwner().getDisplayName(), (hit.getOwner().getDamagePercentage() + "%")));
+		CivMessage.send(player, CivColor.LightGray + CivSettings.localize.localizedString("var_buildable_OnDamageSuccess", hit.getOwner().getDisplayName(), (hit.getOwner().getDamagePercentage() + "%")));
 
-		CivMessage.sendTown(hit.getTown(),
-				CivColor.Yellow + CivSettings.localize.localizedString("var_buildable_underAttackAlert",
-						hit.getOwner().getDisplayName(), hit.getOwner().getCorner(),
-						hit.getOwner().getDamagePercentage()));
+		CivMessage.sendTown(hit.getTown(), CivColor.Yellow + CivSettings.localize.localizedString("var_buildable_underAttackAlert", hit.getOwner().getDisplayName(), hit.getOwner().getCorner(), hit.getOwner().getDamagePercentage()));
 	}
 
 	@Override
@@ -670,8 +616,7 @@ public abstract class Buildable extends Construct {
 		int regenRate = this.getRegenRate();
 		regenRate += this.getTown().getBuffManager().getEffectiveInt("buff_chichen_itza_regen_rate");
 		regenRate += this.getTown().getBuffManager().getEffectiveInt("buff_statue_of_zeus_struct_regen");
-		if (this.getCiv().getCapitol() != null
-				&& this.getCiv().getCapitol().getBuffManager().hasBuff("level5_extraTowerHPTown")) {
+		if (this.getCiv().getCapitol() != null && this.getCiv().getCapitol().getBuffManager().hasBuff("level5_extraTowerHPTown")) {
 			++regenRate;
 		}
 		if (regenRate != 0) {
@@ -727,16 +672,10 @@ public abstract class Buildable extends Construct {
 		this.damage(damage);
 
 		DecimalFormat df = new DecimalFormat("###");
-		CivMessage.sendTown(this.getTown(),
-				CivColor.Rose
-						+ CivSettings.localize.localizedString("var_buildable_cannotSupport", this.getDisplayName(),
-								(centerLoc.getBlockX() + "," + centerLoc.getBlockY() + "," + centerLoc.getBlockZ())));
-		CivMessage.sendTown(this.getTown(),
-				CivColor.Rose + CivSettings.localize.localizedString("var_buildable_cannotSupportDamage",
-						df.format(invalid_hourly_penalty * 100), (this.getHitpoints() + "/" + this.getMaxHitPoints())));
+		CivMessage.sendTown(this.getTown(), CivColor.Rose + CivSettings.localize.localizedString("var_buildable_cannotSupport", this.getDisplayName(), (centerLoc.getBlockX() + "," + centerLoc.getBlockY() + "," + centerLoc.getBlockZ())));
+		CivMessage.sendTown(this.getTown(), CivColor.Rose + CivSettings.localize.localizedString("var_buildable_cannotSupportDamage", df.format(invalid_hourly_penalty * 100), (this.getHitpoints() + "/" + this.getMaxHitPoints())));
 		CivMessage.sendTown(this.getTown(), CivColor.Rose + this.invalidLayerMessage);
-		CivMessage.sendTown(this.getTown(),
-				CivColor.Rose + CivSettings.localize.localizedString("buildable_validationPrompt"));
+		CivMessage.sendTown(this.getTown(), CivColor.Rose + CivSettings.localize.localizedString("buildable_validationPrompt"));
 		this.save();
 	}
 }

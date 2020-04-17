@@ -1,6 +1,5 @@
 package com.avrgaming.civcraft.construct;
 
-import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;

@@ -33,7 +33,6 @@ public class SyncBuildUpdateTask implements Runnable {
 		buildBlockLock.lock();
 		try {
 			updateBlocks.addAll(sbList);
-			CivLog.debug("added " + sbList.size() + ". Now  pullsize = " + updateBlocks.size());
 		} finally {
 			buildBlockLock.unlock();
 		}

@@ -65,7 +65,6 @@ import com.avrgaming.civcraft.randomevents.RandomEvent;
 import com.avrgaming.civcraft.sessiondb.SessionDatabase;
 import com.avrgaming.civcraft.sessiondb.SessionEntry;
 import com.avrgaming.civcraft.structure.Bank;
-import com.avrgaming.civcraft.structure.Buildable;
 import com.avrgaming.civcraft.structure.Capitol;
 import com.avrgaming.civcraft.structure.Market;
 import com.avrgaming.civcraft.structure.Road;
@@ -1191,10 +1190,10 @@ public class CivGlobal {
 		return count;
 	}
 
-	public static Buildable getNearestBuildable(Location location) {
-		Buildable nearest = null;
+	public static Structure getNearestStructure(Location location) {
+		Structure nearest = null;
 		double lowest_distance = Double.MAX_VALUE;
-		for (Buildable struct : structures.values()) {
+		for (Structure struct : structures.values()) {
 			Location loc = new Location(Bukkit.getWorld("world"), struct.getCenterLocation().getX(),
 					struct.getCorner().getLocation().getY(), struct.getCenterLocation().getZ());
 			double distance = loc.distance(location);
@@ -1203,7 +1202,7 @@ public class CivGlobal {
 				nearest = struct;
 			}
 		}
-		for (Buildable wonder : wonders.values()) {
+		for (Structure wonder : wonders.values()) {
 			Location loc = new Location(Bukkit.getWorld("world"), wonder.getCenterLocation().getX(),
 					wonder.getCorner().getLocation().getY(), wonder.getCenterLocation().getZ());
 			double distance = loc.distance(location);

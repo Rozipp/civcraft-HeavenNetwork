@@ -187,7 +187,7 @@ public class Road extends Structure {
 	}
 
 	@Override
-	public void afterBuildCommand(Player player, Location centerLoc) throws CivException, IOException {
+	public void newBiuldSetTemplate(Player player, Location centerLoc) throws CivException, IOException {
 		if (!this.getTown().hasTechnology(this.getRequiredTechnology())) {
 			throw new CivException(CivSettings.localize.localizedString("road_missingTech"));
 		}
@@ -200,14 +200,14 @@ public class Road extends Structure {
 		MarkerPlacementManager.addToPlacementMode(player, this, CivSettings.localize.localizedString("road_startPlacement"));
 	}
 
-	@Override
-	public void build(Player player) throws Exception {
-//		/* 
-//		 * Put the player into a "place mode" which allows them to place down
-//		 * markers
-//		 */
-//		MarkerPlacementManager.addToPlacementMode(player, this, "Road Marker");
-	}
+//	@Override
+//	public void build(Player player) throws Exception {
+////		/* 
+////		 * Put the player into a "place mode" which allows them to place down
+////		 * markers
+////		 */
+////		MarkerPlacementManager.addToPlacementMode(player, this, "Road Marker");
+//	}
 
 	@Override
 	public void onMarkerPlacement(Player player, Location next, ArrayList<Location> locs) throws CivException {

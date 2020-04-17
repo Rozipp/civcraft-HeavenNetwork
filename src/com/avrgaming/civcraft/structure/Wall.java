@@ -182,7 +182,7 @@ public class Wall extends Structure {
 	}
 
 	@Override
-	public void afterBuildCommand(Player player, Location centerLoc) throws CivException, IOException {
+	public void newBiuldSetTemplate(Player player, Location centerLoc) throws CivException, IOException {
 		// Set the player into "place mode" which allows them to place down
 		// markers.
 		if (!this.getTown().hasTechnology(this.getRequiredTechnology())) {
@@ -196,13 +196,13 @@ public class Wall extends Structure {
 		MarkerPlacementManager.addToPlacementMode(player, this, CivSettings.localize.localizedString("wall_marketHeading"));
 	}
 
-	@Override
-	public void build(Player player) throws Exception {
-//		// Set the player into "place mode" which allows them to place down
-//		// markers.
-//		//XXX never called anymore??
-//		MarkerPlacementManager.addToPlacementMode(player, this, "Wall Marker");		
-	}
+//	@Override
+//	public void build(Player player) throws Exception {
+////		// Set the player into "place mode" which allows them to place down
+////		// markers.
+////		//XXX never called anymore??
+////		MarkerPlacementManager.addToPlacementMode(player, this, "Wall Marker");		
+//	}
 
 	private boolean isValidWall() {
 		for (WallBlock block : this.wallBlocks.values()) {

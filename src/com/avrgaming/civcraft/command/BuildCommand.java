@@ -83,7 +83,7 @@ public class BuildCommand extends CommandBase {
 	public void validatenearest_cmd() throws CivException {
 		Player player = getPlayer();
 		Resident resident = getResident();
-		Buildable buildable = CivGlobal.getNearestBuildable(player.getLocation());
+		Buildable buildable = CivGlobal.getNearestStructure(player.getLocation());
 
 		if (buildable.getTown() != resident.getTown()) {
 			throw new CivException(CivSettings.localize.localizedString("cmd_build_validateNearestYourTownOnly"));
@@ -304,7 +304,7 @@ public class BuildCommand extends CommandBase {
 			buildable = Structure.newStructure(getPlayer().getLocation(), sinfo.id, town);
 
 		try {
-			buildable.afterBuildCommand(getPlayer(), getPlayer().getLocation());
+			buildable.newBiuldSetTemplate(getPlayer(), getPlayer().getLocation());
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new CivException(CivSettings.localize.localizedString("internalIOException"));
@@ -330,7 +330,7 @@ public class BuildCommand extends CommandBase {
 			buildable = Structure.newStructure(getPlayer().getLocation(), sinfo.id, town);
 
 		try {
-			buildable.afterBuildCommand(getPlayer(), getPlayer().getLocation());
+			buildable.newBiuldSetTemplate(getPlayer(), getPlayer().getLocation());
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new CivException(CivSettings.localize.localizedString("internalIOException"));
